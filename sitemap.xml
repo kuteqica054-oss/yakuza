@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://yakuzablade.com.tr/</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://yakuzablade.com.tr/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yakuzablade.com.tr/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://yakuzablade.com.tr/"/>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://yakuzablade.com.tr/en/</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://yakuzablade.com.tr/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yakuzablade.com.tr/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://yakuzablade.com.tr/"/>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://yakuzablade.com.tr/anahtar-teslim/</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://yakuzablade.com.tr/anahtar-teslim/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yakuzablade.com.tr/en/turnkey/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://yakuzablade.com.tr/anahtar-teslim/"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://yakuzablade.com.tr/en/turnkey/</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://yakuzablade.com.tr/anahtar-teslim/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yakuzablade.com.tr/en/turnkey/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://yakuzablade.com.tr/anahtar-teslim/"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://yakuzablade.com.tr/ekipman/</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://yakuzablade.com.tr/ekipman/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yakuzablade.com.tr/en/equipment/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://yakuzablade.com.tr/ekipman/"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://yakuzablade.com.tr/en/equipment/</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://yakuzablade.com.tr/ekipman/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yakuzablade.com.tr/en/equipment/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://yakuzablade.com.tr/ekipman/"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://yakuzablade.com.tr/arena-temalari/</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://yakuzablade.com.tr/arena-temalari/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yakuzablade.com.tr/en/arena-themes/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://yakuzablade.com.tr/arena-temalari/"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://yakuzablade.com.tr/en/arena-themes/</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://yakuzablade.com.tr/arena-temalari/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yakuzablade.com.tr/en/arena-themes/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://yakuzablade.com.tr/arena-temalari/"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://yakuzablade.com.tr/oyun-makineleri/</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://yakuzablade.com.tr/oyun-makineleri/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yakuzablade.com.tr/en/arcade-machines/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://yakuzablade.com.tr/oyun-makineleri/"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://yakuzablade.com.tr/en/arcade-machines/</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://yakuzablade.com.tr/oyun-makineleri/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yakuzablade.com.tr/en/arcade-machines/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://yakuzablade.com.tr/oyun-makineleri/"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://yakuzablade.com.tr/hakkimizda/</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://yakuzablade.com.tr/hakkimizda/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yakuzablade.com.tr/en/about/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://yakuzablade.com.tr/hakkimizda/"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://yakuzablade.com.tr/en/about/</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://yakuzablade.com.tr/hakkimizda/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yakuzablade.com.tr/en/about/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://yakuzablade.com.tr/hakkimizda/"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://yakuzablade.com.tr/iletisim/</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://yakuzablade.com.tr/iletisim/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yakuzablade.com.tr/en/contact/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://yakuzablade.com.tr/iletisim/"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://yakuzablade.com.tr/en/contact/</loc>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://yakuzablade.com.tr/iletisim/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://yakuzablade.com.tr/en/contact/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://yakuzablade.com.tr/iletisim/"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+</urlset>
