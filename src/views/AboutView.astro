@@ -13,8 +13,6 @@ const p = d.pages.about;
 const f = d.footer;
 const rows: [string, string][] = [
   [p.legalName, BRAND.legalName],
-  [f.taxInfo, CONTACT.taxOffice && CONTACT.taxNumber ? `${CONTACT.taxOffice} / ${CONTACT.taxNumber}` : ''],
-  [f.mersis, CONTACT.mersis],
   [f.address, CONTACT.address],
   [f.email, CONTACT.email],
   [f.phone, CONTACT.phone],

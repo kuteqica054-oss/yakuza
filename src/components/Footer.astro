@@ -14,9 +14,7 @@ const f = d.footer;
 const items = d.nav.items as { page: PageId; label: string }[];
 const socials = [
   { key: 'instagram', label: 'Instagram', href: SOCIAL.instagram },
-  { key: 'youtube', label: 'YouTube', href: SOCIAL.youtube },
   { key: 'linkedin', label: 'LinkedIn', href: SOCIAL.linkedin },
-  { key: 'tiktok', label: 'TikTok', href: SOCIAL.tiktok },
   { key: 'x', label: 'X (Twitter)', href: SOCIAL.x },
 ] as const;
 const wa = whatsappHref();
@@ -76,7 +74,6 @@ const year = new Date().getFullYear();
   <div class="border-t border-night-800">
     <div class="container-x flex flex-col gap-3 py-6 text-sm text-night-300 md:flex-row md:items-center md:justify-between">
       <p>© {year} {BRAND.legalName} {f.rights}</p>
-      <p>{f.taxInfo}: {CONTACT.taxOffice && CONTACT.taxNumber ? `${CONTACT.taxOffice} / ${CONTACT.taxNumber}` : <span class="todo">TODO</span>} · {f.mersis}: {CONTACT.mersis || <span class="todo">TODO</span>}</p>
     </div>
   </div>
 </footer>

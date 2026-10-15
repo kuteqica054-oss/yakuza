@@ -23,10 +23,10 @@ export const AGE_RANGE = { min: 6, max: 14 };
 
 /** Contacts & legal details. Leave '' until known — UI shows a TODO placeholder. */
 export const CONTACT = {
-  email: '', // TODO: e.g. teklif@alanadiniz.com
+  email: 'info@yakuzablade.com.tr',
   phone: '+90 212 631 65 19',
   /** WhatsApp number in international format, digits only, e.g. 905xxxxxxxxx. TODO */
-  whatsapp: '',
+  whatsapp: '902126316519',
   address: 'Mahfil Çıkmazı 18, 34134 Fatih / İstanbul, Türkiye',
   taxOffice: '', // TODO: vergi dairesi
   taxNumber: '', // TODO: vergi no
@@ -53,9 +53,7 @@ export const OWNERS = [
 /** Social links. TODO: replace '#' with real profile URLs. */
 export const SOCIAL = {
   instagram: '#', // TODO
-  youtube: '#', // TODO
   linkedin: '#', // TODO
-  tiktok: '#', // TODO
   x: 'https://x.com/theyakuzablade',
 };
 
@@ -71,7 +69,7 @@ export const FORM = {
   formspreeEndpoint: 'https://formspree.io/f/TODO',
   name: 'teklif',
   /** Where /teklif.php sends requests. TODO: e.g. teklif@yakuzablade.com.tr (empty = only CSV log). */
-  phpRecipient: '',
+  phpRecipient: 'info@yakuzablade.com.tr',
 };
 
 /**
