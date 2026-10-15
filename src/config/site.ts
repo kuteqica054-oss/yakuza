@@ -40,6 +40,7 @@ export const SOCIAL = {
   youtube: '#', // TODO
   linkedin: '#', // TODO
   tiktok: '#', // TODO
+  x: 'https://x.com/theyakuzablade',
 };
 
 /**
