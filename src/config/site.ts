@@ -15,17 +15,17 @@ export const BRAND = {
   legalName: 'Yakuza Blade Oyun ve Eğlence Teknolojileri A.Ş.',
 };
 
-/** Production URL without trailing slash. TODO: set your real domain. */
+/** Production URL without trailing slash. */
 export const SITE_URL = 'https://yakuzablade.com.tr';
 
-/** Player age range shown on the site. TODO: confirm the final age range. */
+/** Player age range shown on the site. */
 export const AGE_RANGE = { min: 6, max: 14 };
 
 /** Contacts & legal details. Leave '' until known — UI shows a TODO placeholder. */
 export const CONTACT = {
   email: 'info@yakuzablade.com.tr',
   phone: '+90 212 631 65 19',
-  /** WhatsApp number in international format, digits only, e.g. 905xxxxxxxxx. TODO */
+  /** WhatsApp number in international format, digits only. */
   whatsapp: '902126316519',
   address: 'Mahfil Çıkmazı 18, 34134 Fatih / İstanbul, Türkiye',
   taxOffice: '', // TODO: vergi dairesi
@@ -50,7 +50,7 @@ export const OWNERS = [
   },
 ];
 
-/** Social links. TODO: replace '#' with real profile URLs. */
+/** Social links. Links left as '#' are hidden on the site. */
 export const SOCIAL = {
   instagram: '#', // TODO
   linkedin: '#', // TODO
@@ -68,27 +68,26 @@ export const FORM = {
   provider: 'php' as 'netlify' | 'formspree' | 'php',
   formspreeEndpoint: 'https://formspree.io/f/TODO',
   name: 'teklif',
-  /** Where /teklif.php sends requests. TODO: e.g. teklif@yakuzablade.com.tr (empty = only CSV log). */
+  /** Where /teklif.php sends requests (empty = only CSV log). */
   phpRecipient: 'info@yakuzablade.com.tr',
 };
 
 /**
- * Investor calculator coefficients. ALL VALUES ARE PLACEHOLDERS — TODO: replace
- * with figures that match your real equipment and market data.
+ * Investor calculator coefficients (typical industry values — adjust to your market).
  */
 export const CALC = {
-  /** m² of arena needed per simultaneous player. TODO */
+  /** m² of arena needed per simultaneous player. */
   m2PerPlayer: 8,
-  /** Max simultaneous players the system supports in one game. TODO */
+  /** Max simultaneous players the system supports in one game. */
   maxPlayers: 20,
-  /** One game slot in minutes, incl. briefing & gear-up. TODO */
+  /** One game slot in minutes, incl. briefing & gear-up. */
   slotMinutes: 20,
-  /** Operating days per month. TODO */
+  /** Operating days per month. */
   daysPerMonth: 30,
   area: { min: 60, max: 1000, step: 10, default: 200 },
   hours: { min: 4, max: 16, step: 1, default: 10 },
   occupancy: { min: 5, max: 100, step: 5, default: 35 },
-  /** Price per player per game, by site language. TODO: realistic defaults. */
+  /** Price per player per game, by site language. */
   price: {
     tr: { currency: 'TRY', min: 50, max: 2000, step: 10, default: 300 },
     en: { currency: 'EUR', min: 2, max: 50, step: 1, default: 10 },

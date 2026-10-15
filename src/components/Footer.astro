@@ -16,7 +16,7 @@ const socials = [
   { key: 'instagram', label: 'Instagram', href: SOCIAL.instagram },
   { key: 'linkedin', label: 'LinkedIn', href: SOCIAL.linkedin },
   { key: 'x', label: 'X (Twitter)', href: SOCIAL.x },
-] as const;
+].filter((s) => s.href && s.href !== '#');
 const wa = whatsappHref();
 const year = new Date().getFullYear();
 ---
