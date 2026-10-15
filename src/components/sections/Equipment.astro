@@ -1,0 +1,80 @@
+---
+import EquipmentArt from '../art/EquipmentArt.astro';
+import Icon from '../ui/Icon.astro';
+import SectionHead from '../ui/SectionHead.astro';
+import SpecTable from '../ui/SpecTable.astro';
+import { t, routes, type Lang } from '../../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const e = t(lang).equipment;
+const bg = ['bg-cyan-soft', 'bg-coral-soft', 'bg-sun-soft', 'bg-cyan-soft', 'bg-coral-soft', 'bg-sun-soft'];
+---
+<section class="bg-paper py-20 lg:py-28" aria-labelledby="equip-title">
+  <div class="container-x">
+    <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+      <SectionHead eyebrow={e.eyebrow} title={e.title} sub={e.sub} id="equip-title" />
+      <a href={routes.equipment[lang]} class="link-arrow reveal shrink-0">{e.cta}<Icon name="ArrowRight" size={18} /></a>
+    </div>
+
+    <div class="mt-12 grid gap-8 lg:grid-cols-[19rem_1fr]" data-tabs>
+      <div role="tablist" aria-label={e.title} aria-orientation="vertical" class="-mx-4 flex gap-2 overflow-x-auto px-4 pb-2 lg:mx-0 lg:flex-col lg:overflow-visible lg:px-0 [scrollbar-width:none]">
+        {e.items.map((it, i) => (
+          <button type="button" role="tab" id={`eq-tab-${it.id}`} aria-controls={`eq-panel-${it.id}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1}
+            class="group flex shrink-0 items-center gap-3 rounded-2xl px-4 py-3 text-left transition aria-selected:bg-night-900 aria-selected:text-paper hover:bg-paper-2 aria-selected:hover:bg-night-900">
+            <span class:list={['grid h-11 w-11 shrink-0 place-items-center rounded-xl', bg[i]]}>
+              <EquipmentArt id={it.id} alt="" class="h-9 w-9" />
+            </span>
+            <span>
+              <span class="block font-display text-[0.95rem] font-bold leading-tight">{it.name}</span>
+              <span class="mt-0.5 hidden text-xs opacity-75 lg:block">{it.short}</span>
+            </span>
+          </button>
+        ))}
+      </div>
+
+      <div>
+        {e.items.map((it, i) => (
+          <div role="tabpanel" id={`eq-panel-${it.id}`} aria-labelledby={`eq-tab-${it.id}`} hidden={i !== 0} tabindex="0" class="grid gap-8 xl:grid-cols-[1.05fr_1fr]">
+            <div class:list={['relative grid aspect-[4/3] place-items-center self-start overflow-hidden rounded-[var(--radius-blob)] p-6 maze-dots xl:sticky xl:top-24', bg[i]]}>
+              <EquipmentArt id={it.id} alt={it.alt} class="w-full" />
+            </div>
+            <div>
+              <h3 class="text-2xl font-bold sm:text-3xl">{it.name}</h3>
+              <p class="muted mt-3">{it.text}</p>
+              <ul class="mt-5 grid gap-2">
+                {it.features.map((f) => <li class="flex gap-2.5"><Icon name="Check" size={20} class="mt-0.5 shrink-0 text-cyan-ink" />{f}</li>)}
+              </ul>
+              <h4 class="mt-7 font-sans text-sm font-bold text-ink-soft">{e.specsLabel}</h4>
+              <SpecTable class="mt-2" caption={`${it.name} — ${e.specsLabel}`} param={e.paramLabel} value={e.valueLabel} rows={it.specs.slice(0, 5)} />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-tabs]').forEach((root) => {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[role=tab]')];
+    const select = (tab: HTMLButtonElement, focus = false) => {
+      tabs.forEach((t) => {
+        const on = t === tab;
+        t.setAttribute('aria-selected', String(on));
+        t.tabIndex = on ? 0 : -1;
+        document.getElementById(t.getAttribute('aria-controls')!)!.hidden = !on;
+      });
+      if (focus) tab.focus();
+    };
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => select(tab));
+      tab.addEventListener('keydown', (e) => {
+        const k = e.key;
+        if (['ArrowDown', 'ArrowRight'].includes(k)) { e.preventDefault(); select(tabs[(i + 1) % tabs.length], true); }
+        if (['ArrowUp', 'ArrowLeft'].includes(k)) { e.preventDefault(); select(tabs[(i - 1 + tabs.length) % tabs.length], true); }
+        if (k === 'Home') { e.preventDefault(); select(tabs[0], true); }
+        if (k === 'End') { e.preventDefault(); select(tabs[tabs.length - 1], true); }
+      });
+    });
+  });
+</script>

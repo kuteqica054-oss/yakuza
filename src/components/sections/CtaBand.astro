@@ -1,0 +1,18 @@
+---
+import Icon from '../ui/Icon.astro';
+import { t, routes, type Lang } from '../../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const d = t(lang);
+---
+<section class="bg-paper py-16">
+  <div class="container-x">
+    <div class="reveal flex flex-col items-start justify-between gap-6 rounded-[var(--radius-blob)] bg-night-900 p-8 text-paper sm:p-12 md:flex-row md:items-center">
+      <div>
+        <h2 class="text-2xl font-bold sm:text-3xl">{d.form.title}</h2>
+        <p class="mt-2 text-night-200">{d.form.sub}</p>
+      </div>
+      <a href={`${routes.contact[lang]}#teklif`} class="btn btn-primary shrink-0">{d.common.getQuote}<Icon name="ArrowRight" size={18} /></a>
+    </div>
+  </div>
+</section>

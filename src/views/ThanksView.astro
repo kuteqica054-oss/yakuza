@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+import Todo from '../components/ui/Todo.astro';
+import { t, routes, type Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const d = t(lang);
+const p = d.pages.thanks;
+---
+<BaseLayout lang={lang} page="thanks" noindex>
+  <section class="scene-dark arena-grid grid min-h-[70vh] place-items-center py-20">
+    <div class="container-x max-w-2xl text-center">
+      <svg aria-hidden="true" viewBox="0 0 120 120" class="mx-auto h-24 w-24"><circle cx="60" cy="60" r="54" fill="none" stroke="#1fd6c8" stroke-width="4" /><circle cx="60" cy="60" r="38" fill="none" stroke="#ff5a4e" stroke-width="4" /><circle cx="60" cy="60" r="20" fill="#ffc93c" class="pulse" /></svg>
+      <h1 class="mt-8 text-4xl font-bold sm:text-5xl">{p.title}</h1>
+      <p class="lead mt-5 text-night-200"><Todo text={p.text} /></p>
+      <div class="mt-8 flex flex-wrap justify-center gap-3">
+        <a href={routes.themes[lang]} class="btn btn-primary">{d.form.thanks.cta}<Icon name="ArrowRight" size={18} /></a>
+        <a href={routes.home[lang]} class="btn btn-ghost-dark">{d.common.backHome}</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

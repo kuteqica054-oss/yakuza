@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/sections/PageHero.astro';
+import CtaBand from '../components/sections/CtaBand.astro';
+import Icon from '../components/ui/Icon.astro';
+import Todo from '../components/ui/Todo.astro';
+import PhotoSlot from '../components/ui/PhotoSlot.astro';
+import { t, type Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const d = t(lang);
+const p = d.pages.arcade;
+const tones = ['bg-coral-soft text-coral-ink', 'bg-cyan-soft text-cyan-ink', 'bg-sun-soft text-sun-ink'];
+---
+<BaseLayout lang={lang} page="arcade">
+  <PageHero eyebrow={p.eyebrow} title={p.title} sub={p.sub} tone="sun">
+    <p class="mt-6"><Todo text={p.todoNote} /></p>
+  </PageHero>
+  <section class="bg-paper py-16 lg:py-24" aria-labelledby="cat-title">
+    <div class="container-x">
+      <h2 id="cat-title" class="reveal h-section">{p.categoriesTitle}</h2>
+      <ul class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {p.categories.map((c, i) => (
+          <li class="reveal rounded-[var(--radius-blob)] border-2 border-dashed border-paper-3 p-6">
+            <span class:list={['grid h-12 w-12 place-items-center rounded-2xl', tones[i % 3]]}><Icon name={c.icon} size={24} /></span>
+            <h3 class="mt-4 text-xl font-bold">{c.title}</h3>
+            <p class="muted mt-2"><Todo text={c.text} /></p>
+          </li>
+        ))}
+        <li class="reveal">
+          <!-- PHOTO: arcade zone photo, 1200×1200 px -->
+          <PhotoSlot label={d.common.photoSlot} note="1200×1200" ratio="aspect-square sm:aspect-auto sm:h-full" />
+        </li>
+      </ul>
+    </div>
+  </section>
+  <section class="bg-paper-2 py-16 lg:py-20" aria-labelledby="arcade-why">
+    <div class="container-x grid gap-8 lg:grid-cols-[1fr_1.4fr]">
+      <h2 id="arcade-why" class="reveal h-section">{p.whyTitle}</h2>
+      <ol class="grid gap-4">
+        {p.why.map((w, i) => (
+          <li class="reveal flex items-center gap-5 rounded-2xl bg-paper p-5 ring-1 ring-paper-3">
+            <span class="font-display text-3xl font-bold text-coral">{i + 1}</span><span class="text-lg">{w}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+  <CtaBand lang={lang} />
+</BaseLayout>

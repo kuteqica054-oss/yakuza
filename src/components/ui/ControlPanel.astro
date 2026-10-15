@@ -1,0 +1,29 @@
+---
+/** HTML/CSS mockup of the game-management console (fictional demo data, non-interactive). */
+import Icon from './Icon.astro';
+import { t, type Lang } from '../../i18n';
+interface Props { lang: Lang; class?: string }
+const { lang, class: cls = '' } = Astro.props;
+const c = t(lang).control;
+const demo = t(lang).scoreboard.demo;
+---
+<div class:list={['rounded-3xl bg-paper p-5 text-ink ring-1 ring-paper-3 shadow-[0_30px_60px_-30px_rgb(8_18_44/.6)]', cls]} role="group" aria-label={`${c.title} (${demo})`}>
+  <div class="flex items-center justify-between">
+    <p class="font-display text-sm font-bold">{c.title}</p>
+    <span class="flex items-center gap-1.5 text-xs font-semibold text-ink-soft"><span class="h-2 w-2 rounded-full bg-lime blink"></span>{c.arena}</span>
+  </div>
+  <p class="mt-4 text-xs font-bold text-ink-soft">{c.mode}</p>
+  <div class="mt-2 flex flex-wrap gap-1.5">
+    {c.modes.map((m, i) => <span class:list={['rounded-full px-3 py-1.5 text-xs font-bold', i === 0 ? 'bg-night-900 text-paper' : 'bg-paper-2 text-ink-soft']}>{m}</span>)}
+  </div>
+  <div class="mt-4 grid grid-cols-3 gap-2 text-center">
+    <div class="rounded-2xl bg-paper-2 p-2.5"><p class="text-[0.7rem] text-ink-soft">{c.ageGroup}</p><p class="font-display text-sm font-bold">{c.ages[1]}</p></div>
+    <div class="rounded-2xl bg-paper-2 p-2.5"><p class="text-[0.7rem] text-ink-soft">{c.duration}</p><p class="font-display text-sm font-bold">{c.durationValue}</p></div>
+    <div class="rounded-2xl bg-paper-2 p-2.5"><p class="text-[0.7rem] text-ink-soft">{c.players}</p><p class="font-display text-sm font-bold">{c.playersValue}</p></div>
+  </div>
+  <p class="mt-4 flex items-center gap-2 text-xs font-semibold text-cyan-ink"><Icon name="Check" size={16} />{c.ready}</p>
+  <div class="mt-4 grid grid-cols-[1fr_auto] gap-2">
+    <span class="flex items-center justify-center gap-2 rounded-full bg-coral py-3 text-sm font-bold text-night-950"><Icon name="Play" size={16} />{c.start}</span>
+    <span class="flex items-center justify-center rounded-full bg-paper-2 px-4 text-sm font-bold text-ink-soft"><Icon name="Pause" size={16} /><span class="sr-only">{c.pause}</span></span>
+  </div>
+</div>

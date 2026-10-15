@@ -1,0 +1,23 @@
+---
+import { LANGS, locales, routes, type Lang, type PageId } from '../i18n';
+interface Props { lang: Lang; page: PageId | 'notFound'; dark?: boolean; label: string }
+const { lang, page, dark = true, label } = Astro.props;
+const href = (l: Lang) => (page === 'notFound' ? routes.home[l] : routes[page][l]);
+---
+<nav aria-label={label} class:list={['inline-flex rounded-full p-1 text-sm font-bold', dark ? 'bg-night-800' : 'bg-paper-2']}>
+  {LANGS.map((l) => (
+    <a
+      href={href(l)}
+      hreflang={locales[l].html}
+      lang={locales[l].html}
+      aria-current={l === lang ? 'true' : undefined}
+      aria-label={`${locales[l].label} — ${locales[l].name}`}
+      class:list={[
+        'rounded-full px-3 py-1.5 transition-colors',
+        l === lang
+          ? (dark ? 'bg-paper text-ink' : 'bg-ink text-paper')
+          : (dark ? 'text-night-200 hover:text-paper' : 'text-ink-soft hover:text-ink'),
+      ]}
+    >{locales[l].label}</a>
+  ))}
+</nav>

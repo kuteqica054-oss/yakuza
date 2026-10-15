@@ -1,0 +1,32 @@
+---
+/**
+ * PHOTO SLOT — placeholder until real photos exist.
+ *
+ * How to add a photo:
+ *   1. Put the file in /src/assets/photos/ (JPG/WEBP, min. 1600×1000 px for wide slots,
+ *      1200×1200 for square ones; keep under ~400 KB after export).
+ *   2. Import it in the page:  import arena1 from '../assets/photos/arena-1.jpg';
+ *   3. Pass it in:            <PhotoSlot src={arena1} alt="..." />
+ *   Astro's <Image> then generates responsive, optimised versions automatically.
+ *
+ * Suggested shots: finished arenas (wide, lights on), equipment close-ups,
+ * kids playing — ONLY with written parental consent (KVKK / GDPR).
+ */
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Icon from './Icon.astro';
+interface Props { src?: ImageMetadata; alt?: string; label: string; note?: string; ratio?: string; dark?: boolean; class?: string }
+const { src, alt = '', label, note, ratio = 'aspect-[16/10]', dark = false, class: cls = '' } = Astro.props;
+---
+{src ? (
+  <Image src={src} alt={alt} class:list={['w-full rounded-[var(--radius-blob)] object-cover', ratio, cls]} widths={[480, 800, 1200, 1600]} sizes="(min-width: 1024px) 50vw, 100vw" />
+) : (
+  <figure class:list={['relative grid place-items-center overflow-hidden rounded-[var(--radius-blob)] border-2 border-dashed p-6 text-center', ratio,
+    dark ? 'border-night-600 bg-night-800/60 text-night-200' : 'border-paper-3 bg-paper-2 text-ink-soft maze-dots', cls]}>
+    <div>
+      <Icon name="Image" size={32} class="mx-auto opacity-70" />
+      <figcaption class="mt-3 text-sm font-bold">{label}</figcaption>
+      {note && <p class="mt-1 text-xs opacity-80">{note}</p>}
+    </div>
+  </figure>
+)}

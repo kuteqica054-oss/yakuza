@@ -1,0 +1,81 @@
+---
+/** Top-down arena plan with labelled zones and guest flow. Labels come from the page dictionary. */
+interface Props {
+  alt: string;
+  zones: { entrance: string; briefing: string; charging: string; field: string; score: string; exit: string; base: string; target: string };
+  flow: string;
+  class?: string;
+}
+const { alt, zones, flow, class: cls = '' } = Astro.props;
+const walls = [
+  [330, 70, 14, 120], [330, 260, 120, 14], [420, 110, 120, 14], [520, 170, 14, 140], [600, 60, 14, 100],
+  [600, 230, 110, 14], [460, 360, 14, 80], [640, 330, 14, 90], [380, 360, 60, 14], [700, 120, 60, 14],
+];
+const targets = [[300, 40, '#ffc93c'], [470, 40, '#1fd6c8'], [760, 210, '#ffc93c'], [560, 440, '#ff5a4e'], [740, 440, '#1fd6c8'], [285, 330, '#ff5a4e']];
+const label = 'font-family:Figtree Variable, Figtree, sans-serif;font-weight:700';
+---
+<svg class={cls} viewBox="0 0 800 480" role="img" aria-label={alt} xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="plan-arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" fill="#ffc93c" /></marker>
+    <pattern id="plan-grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0 H0 V20" fill="none" stroke="#9fb0d9" stroke-opacity=".08" /></pattern>
+  </defs>
+
+  <rect x="12" y="12" width="776" height="456" rx="18" fill="#13254f" stroke="#9fb0d9" stroke-opacity=".5" stroke-width="2" />
+  <!-- support zones -->
+  <rect x="24" y="24" width="210" height="104" rx="12" fill="#1d3366" />
+  <rect x="24" y="138" width="210" height="150" rx="12" fill="#1d3366" />
+  <rect x="24" y="298" width="210" height="158" rx="12" fill="#1d3366" />
+  <!-- field -->
+  <rect x="246" y="24" width="530" height="432" rx="12" fill="url(#plan-grid)" stroke="#2b4682" stroke-width="2" />
+
+  <!-- charging rack -->
+  {[0, 1, 2, 3, 4, 5].map((i) => <rect x={44 + i * 28} y="76" width="18" height="34" rx="5" fill={i % 2 ? '#1fd6c8' : '#ff5a4e'} opacity=".85" />)}
+  <!-- briefing benches -->
+  <rect x="50" y="210" width="150" height="12" rx="6" fill="#2b4682" /><rect x="50" y="238" width="150" height="12" rx="6" fill="#2b4682" /><rect x="50" y="266" width="150" height="12" rx="6" fill="#2b4682" opacity="0" />
+  <!-- score screen -->
+  <rect x="40" y="314" width="132" height="34" rx="6" fill="#08122c" stroke="#ffc93c" stroke-width="2" />
+  <rect x="50" y="324" width="50" height="6" rx="3" fill="#ff5a4e" /><rect x="50" y="334" width="40" height="6" rx="3" fill="#1fd6c8" />
+  <!-- desk -->
+  <rect x="120" y="392" width="90" height="26" rx="13" fill="#2b4682" />
+
+  <!-- maze walls -->
+  {walls.map(([x, y, w, h]) => <rect x={x} y={y} width={w} height={h} rx="7" fill="#3a5698" />)}
+  <!-- targets -->
+  {targets.map(([x, y, c]) => (
+    <g><circle cx={x} cy={y} r="11" fill="#08122c" stroke={c as string} stroke-width="3" /><circle cx={x} cy={y} r="4" fill={c as string} /></g>
+  ))}
+  <!-- bases -->
+  <g><circle cx="300" cy="420" r="22" fill="#ff5a4e" fill-opacity=".2" stroke="#ff5a4e" stroke-width="3" /><circle cx="300" cy="420" r="8" fill="#ff5a4e" /></g>
+  <g><circle cx="720" cy="70" r="22" fill="#1fd6c8" fill-opacity=".2" stroke="#1fd6c8" stroke-width="3" /><circle cx="720" cy="70" r="8" fill="#1fd6c8" /></g>
+
+  <!-- crossing beams -->
+  <line x1="300" y1="420" x2="720" y2="70" stroke="#ff5a4e" stroke-width="1.5" stroke-dasharray="4 6" opacity=".6" />
+  <line x1="290" y1="90" x2="740" y2="440" stroke="#1fd6c8" stroke-width="1.5" stroke-dasharray="4 6" opacity=".6" />
+
+  <!-- doors -->
+  <rect x="60" y="452" width="70" height="8" rx="4" fill="#fbf8f2" />
+  <rect x="234" y="170" width="8" height="70" rx="4" fill="#fbf8f2" opacity=".7" />
+  <!-- emergency exits -->
+  <rect x="776" y="300" width="8" height="70" rx="4" fill="#8be36a" />
+  <rect x="420" y="12" width="70" height="8" rx="4" fill="#8be36a" />
+
+  <!-- guest flow -->
+  <path d="M95 440 C 95 380, 60 380, 60 300 S 120 200, 130 160 S 100 110, 150 120 S 230 200, 250 205 S 330 230, 370 220" fill="none" stroke="#ffc93c" stroke-width="3" stroke-dasharray="2 9" stroke-linecap="round" marker-end="url(#plan-arrow)" class="flow" />
+
+  <!-- labels -->
+  <g style={label} font-size="15" fill="#fbf8f2">
+    <text x="40" y="54">{zones.charging}</text>
+    <text x="40" y="168">{zones.briefing}</text>
+    <text x="40" y="378" fill="#ffc93c">{zones.score}</text>
+    <text x="40" y="440">{zones.entrance}</text>
+  </g>
+  <g style={label}>
+    <rect x="560" y="388" width="200" height="40" rx="20" fill="#08122c" opacity=".85" />
+    <text x="660" y="414" text-anchor="middle" font-size="18" fill="#fbf8f2">{zones.field}</text>
+    <text x="760" y="294" text-anchor="end" font-size="13" fill="#8be36a">{zones.exit}</text>
+    <text x="500" y="44" font-size="13" fill="#8be36a">{zones.exit}</text>
+    <text x="330" y="426" font-size="13" fill="#ff5a4e">{zones.base}</text>
+    <text x="690" y="108" text-anchor="end" font-size="13" fill="#1fd6c8">{zones.base}</text>
+    <text x="190" y="440" font-size="12" fill="#ffc93c" text-anchor="end" opacity="0">{flow}</text>
+  </g>
+</svg>

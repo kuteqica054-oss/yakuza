@@ -1,0 +1,47 @@
+---
+/** HTML/CSS leaderboard mockup with fictional demo data. */
+import { t, fmtNumber, type Lang } from '../../i18n';
+interface Props { lang: Lang; class?: string; compact?: boolean }
+const { lang, class: cls = '', compact = false } = Astro.props;
+const s = t(lang).scoreboard;
+const max = Math.max(...s.teams.map((x) => x.score));
+const dot = { coral: 'bg-coral', cyan: 'bg-cyan' } as Record<string, string>;
+const txt = { coral: 'text-coral', cyan: 'text-cyan' } as Record<string, string>;
+---
+<div class:list={['rounded-3xl bg-night-950 p-5 text-paper ring-1 ring-night-700 shadow-[0_30px_60px_-30px_rgb(8_18_44/.8)]', cls]} aria-label={`${s.title} (${s.demo})`} role="group">
+  <div class="flex items-center justify-between gap-3">
+    <p class="font-display text-sm font-bold whitespace-nowrap">{s.title}</p>
+    <span class="rounded-full bg-night-800 px-2.5 py-1 text-[0.7rem] font-semibold text-night-200">{s.demo}</span>
+  </div>
+  <p class="mt-1 text-xs text-night-300">{s.mission}</p>
+  <div class="mt-4 flex items-end justify-between">
+    <span class="text-xs text-night-300">{s.time}</span>
+    <span class="font-display text-3xl font-bold tabular-nums text-sun">07:42</span>
+  </div>
+  <ul class="mt-4 grid gap-3">
+    {s.teams.map((tm, i) => (
+      <li>
+        <div class="flex items-center justify-between text-sm">
+          <span class="flex items-center gap-2 font-semibold"><span class:list={['h-2.5 w-2.5 rounded-full', dot[tm.color]]}></span>{tm.name}</span>
+          <span class:list={['font-display font-bold tabular-nums', txt[tm.color]]}>{fmtNumber(lang, tm.score)}</span>
+        </div>
+        <div class="mt-1.5 h-2.5 overflow-hidden rounded-full bg-night-800">
+          <div class:list={['h-full rounded-full', dot[tm.color]]} style={`width:${(tm.score / max) * 100}%`}></div>
+        </div>
+      </li>
+    ))}
+  </ul>
+  {!compact && (
+    <>
+      <p class="mt-5 text-xs font-bold text-night-300">{s.playersTitle}</p>
+      <ol class="mt-2 grid gap-1.5 text-sm">
+        {s.players.map((p, i) => (
+          <li class="flex items-center justify-between rounded-xl bg-night-900 px-3 py-2">
+            <span class="flex items-center gap-2.5"><span class="w-4 font-display text-xs text-night-300">{i + 1}</span><span class:list={['h-2 w-2 rounded-full', dot[p.team]]}></span>{p.name}</span>
+            <span class="tabular-nums text-night-200">{fmtNumber(lang, p.score)} {s.points}</span>
+          </li>
+        ))}
+      </ol>
+    </>
+  )}
+</div>

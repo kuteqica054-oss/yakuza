@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/sections/PageHero.astro';
+import Process from '../components/sections/Process.astro';
+import CtaBand from '../components/sections/CtaBand.astro';
+import Icon from '../components/ui/Icon.astro';
+import Todo from '../components/ui/Todo.astro';
+import PhotoSlot from '../components/ui/PhotoSlot.astro';
+import { t, routes, type Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const d = t(lang);
+const p = d.pages.turnkey;
+---
+<BaseLayout lang={lang} page="turnkey">
+  <PageHero eyebrow={p.eyebrow} title={p.title} sub={p.sub}>
+    <div class="mt-8 flex flex-wrap gap-3">
+      <a href={`${routes.contact[lang]}#teklif`} class="btn btn-primary">{d.common.getQuote}<Icon name="ArrowRight" size={18} /></a>
+    </div>
+  </PageHero>
+  <Process lang={lang} variant="detailed" showHead={false} />
+
+  <section class="bg-paper py-20 lg:py-28">
+    <div class="container-x grid gap-10 lg:grid-cols-[1.2fr_1fr]">
+      <div class="reveal">
+        <h2 class="h-section">{p.includedTitle}</h2>
+        <ul class="mt-8 grid gap-x-8 gap-y-4 sm:grid-cols-2">
+          {p.included.map((it) => <li class="flex gap-3"><span class="mt-1 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-cyan text-night-950"><Icon name="Check" size={14} strokeWidth={3} /></span>{it}</li>)}
+        </ul>
+        <p class="mt-6 text-sm text-ink-soft"><Todo text={p.includedNote} /></p>
+      </div>
+      <div class="reveal rounded-[var(--radius-blob)] bg-sun-soft p-8">
+        <h2 class="text-2xl font-bold">{p.yourTitle}</h2>
+        <ul class="mt-6 grid gap-4">
+          {p.your.map((it) => <li class="flex gap-3"><Icon name="Building2" size={20} class="mt-0.5 shrink-0 text-sun-ink" /><span><Todo text={it} /></span></li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-paper pb-8">
+    <div class="container-x">
+      <h2 class="reveal text-2xl font-bold">{p.photoTitle}</h2>
+      <div class="mt-6 grid gap-5 md:grid-cols-3">
+        <!-- PHOTO: 3 × installation photos, 1600×1000 px, landscape -->
+        <PhotoSlot label={d.common.photoSlot} note={p.photoNote} />
+        <PhotoSlot label={d.common.photoSlot} note="1600×1000" />
+        <PhotoSlot label={d.common.photoSlot} note="1600×1000" />
+      </div>
+    </div>
+  </section>
+  <CtaBand lang={lang} />
+</BaseLayout>

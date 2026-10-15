@@ -1,0 +1,151 @@
+@import "tailwindcss";
+@import "@fontsource-variable/unbounded";
+@import "@fontsource-variable/figtree";
+
+/* ───────────────────────────────────────────────
+   DESIGN TOKENS — all colours & fonts live here.
+   Change a value once, it updates the whole site
+   (Tailwind utilities like bg-night-900, text-coral…).
+   ─────────────────────────────────────────────── */
+@theme {
+  /* Arena scene — deep navy (never pure black) */
+  --color-night-950: #08122c;
+  --color-night-900: #0c1a3d;
+  --color-night-800: #13254f;
+  --color-night-700: #1d3366;
+  --color-night-600: #2b4682;
+  --color-night-300: #9fb0d9;
+  --color-night-200: #c9d3ee;
+
+  /* Business scene — warm off-white & ink */
+  --color-paper: #fbf8f2;
+  --color-paper-2: #f3eee3;
+  --color-paper-3: #e8e1d2;
+  --color-ink: #0c1a3d;
+  --color-ink-soft: #46527a;
+
+  /* Team colours */
+  --color-coral: #ff5a4e;
+  --color-coral-soft: #ffe1dc;
+  --color-coral-ink: #b8352b;   /* coral for text on light bg (AA) */
+  --color-cyan: #1fd6c8;
+  --color-cyan-soft: #d2f6f2;
+  --color-cyan-ink: #08736c;    /* teal for text on light bg (AA) */
+  --color-sun: #ffc93c;
+  --color-sun-soft: #fff1c7;
+  --color-sun-ink: #8a5d00;
+  --color-lime: #8be36a;        /* status / charge indicators only */
+
+  --font-display: "Unbounded Variable", "Unbounded", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Figtree Variable", "Figtree", ui-sans-serif, system-ui, sans-serif;
+
+  --radius-blob: 2rem;
+  --ease-pop: cubic-bezier(.2, .9, .3, 1.2);
+}
+
+@layer base {
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body {
+    @apply bg-paper text-ink font-sans antialiased;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    overflow-x: clip;
+  }
+  h1, h2, h3, h4 { @apply font-display; letter-spacing: -0.02em; line-height: 1.12; text-wrap: balance; }
+  p { text-wrap: pretty; }
+  :focus-visible { outline: 3px solid var(--color-sun); outline-offset: 3px; border-radius: 6px; }
+  .on-light :focus-visible, .bg-paper :focus-visible { outline-color: var(--color-coral-ink); }
+  ::selection { background: var(--color-sun); color: var(--color-ink); }
+  [id] { scroll-margin-top: 6rem; }
+}
+
+@layer components {
+  .container-x { @apply mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-8; }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 font-sans text-sm font-bold tracking-wide;
+  }
+  .eyebrow::before {
+    content: ""; width: .55rem; height: .55rem; border-radius: 999px;
+    background: currentColor; box-shadow: 0 0 0 4px color-mix(in oklab, currentColor 20%, transparent);
+  }
+
+  .h-section { @apply text-3xl sm:text-4xl lg:text-[2.75rem] font-bold; }
+  .lead { @apply text-lg sm:text-xl leading-relaxed; }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 font-bold text-base
+      transition-transform duration-200 select-none;
+    transition-timing-function: var(--ease-pop);
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .btn:active { transform: translateY(0); }
+  .btn-primary { @apply bg-coral text-night-950; box-shadow: 0 6px 0 -1px #c23e33; }
+  .btn-primary:hover { box-shadow: 0 8px 0 -1px #c23e33; }
+  .btn-ghost-dark { @apply text-paper ring-2 ring-inset ring-night-300/50 hover:ring-paper; }
+  .btn-ghost-light { @apply text-ink ring-2 ring-inset ring-ink/20 hover:ring-ink; }
+  .btn-dark { @apply bg-night-900 text-paper; box-shadow: 0 6px 0 -1px var(--color-night-600); }
+
+  .link-arrow { @apply inline-flex items-center gap-2 font-bold underline decoration-2 underline-offset-4; }
+  .link-arrow:hover svg { transform: translateX(3px); }
+  .link-arrow svg { transition: transform .2s; }
+
+  .todo {
+    @apply inline rounded-md bg-sun-soft px-1.5 py-0.5 text-[0.85em] font-bold text-sun-ink; box-decoration-break: clone; -webkit-box-decoration-break: clone;
+  }
+  .scene-dark .todo { @apply bg-sun/15 text-sun; }
+
+  /* Dark "arena" scenes */
+  .scene-dark { @apply bg-night-900 text-paper; }
+  .scene-dark .muted { @apply text-night-200; }
+  .muted { @apply text-ink-soft; }
+
+  /* Subtle arena floor grid for dark scenes */
+  .arena-grid {
+    background-image:
+      linear-gradient(to right, rgb(159 176 217 / .07) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(159 176 217 / .07) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  /* Maze motif for light scenes */
+  .maze-dots {
+    background-image: radial-gradient(rgb(12 26 61 / .09) 1.5px, transparent 1.5px);
+    background-size: 22px 22px;
+  }
+
+  .field-input {
+    @apply w-full rounded-xl border-2 border-paper-3 bg-white px-4 py-3 text-ink placeholder:text-ink-soft/60
+      transition-colors outline-none;
+  }
+  .field-input:focus { @apply border-night-700; box-shadow: 0 0 0 4px rgb(31 214 200 / .25); }
+  .select-chev {
+    appearance: none; padding-right: 2.75rem;
+    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%230c1a3d' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 1rem center / 20px;
+  }
+  .field-input[aria-invalid="true"] { @apply border-coral-ink; }
+}
+
+/* ── Motion ───────────────────────────────────── */
+@keyframes beam-travel { to { stroke-dashoffset: -400; } }
+@keyframes pulse-ring { 0%,100% { opacity: .35; transform: scale(1); } 50% { opacity: .9; transform: scale(1.12); } }
+@keyframes blink { 0%, 100% { opacity: 1 } 50% { opacity: .25 } }
+@keyframes float-y { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-6px) } }
+
+.beam { stroke-dasharray: 26 140; animation: beam-travel 2.6s linear infinite; }
+.beam-slow { animation-duration: 4s; }
+.flow { animation: beam-travel 14s linear infinite; }
+.pulse { transform-box: fill-box; transform-origin: center; animation: pulse-ring 2.4s ease-in-out infinite; }
+.blink { animation: blink 1.6s steps(2, jump-none) infinite; }
+.float { animation: float-y 5s ease-in-out infinite; }
+
+.reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s var(--ease-pop); }
+.reveal.is-in { opacity: 1; transform: none; }
+.no-js .reveal { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .beam, .flow, .pulse, .blink, .float { animation: none !important; }
+  .beam { stroke-dasharray: none; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .btn, .btn:hover { transform: none; }
+}

@@ -1,0 +1,20 @@
+---
+import SocialIcon from './ui/SocialIcon.astro';
+import { whatsappHref } from '../lib/contact';
+import { t, routes, type Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const d = t(lang);
+// TODO: set CONTACT.whatsapp in src/config/site.ts — until then the button links to the contact form.
+const href = whatsappHref(lang === 'tr' ? 'Merhaba, lazer tag arenası hakkında bilgi almak istiyorum.' : "Hi, I'd like to learn more about a laser tag arena.");
+---
+<a
+  href={href || `${routes.contact[lang]}#teklif`}
+  target={href ? '_blank' : undefined}
+  rel={href ? 'noopener' : undefined}
+  class="fixed bottom-4 right-4 z-30 inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#25d366] text-night-950 shadow-[0_8px_24px_-6px_rgb(8_18_44/.5)] ring-4 ring-paper transition-transform hover:scale-105 sm:bottom-6 sm:right-6"
+  aria-label={href ? d.common.whatsapp : `${d.common.whatsapp} (${d.common.whatsappTodo})`}
+  title={href ? d.common.whatsapp : d.common.whatsappTodo}
+>
+  <SocialIcon name="whatsapp" size={28} />
+</a>

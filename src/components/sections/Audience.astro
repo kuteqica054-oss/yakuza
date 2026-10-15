@@ -1,0 +1,18 @@
+---
+import Icon from '../ui/Icon.astro';
+import { t, type Lang } from '../../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const a = t(lang).audience;
+const icons = ['Store', 'Gamepad2', 'Hotel', 'Trees', 'Handshake'];
+---
+<section class="border-b border-paper-3 bg-paper" aria-label={a.label}>
+  <div class="container-x flex flex-col gap-4 py-6 lg:flex-row lg:items-center lg:gap-10">
+    <p class="shrink-0 font-display text-sm font-bold text-coral-ink">{a.label}</p>
+    <ul class="flex flex-wrap gap-x-7 gap-y-3 lg:flex-nowrap lg:justify-between lg:flex-1">
+      {a.items.map((it, i) => (
+        <li class="flex items-center gap-2.5 font-semibold text-ink"><Icon name={icons[i]} size={20} class="text-cyan-ink" />{it}</li>
+      ))}
+    </ul>
+  </div>
+</section>

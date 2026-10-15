@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/sections/PageHero.astro';
+import QuoteForm from '../components/sections/QuoteForm.astro';
+import Faq from '../components/sections/Faq.astro';
+import Icon from '../components/ui/Icon.astro';
+import SocialIcon from '../components/ui/SocialIcon.astro';
+import { CONTACT } from '../config/site';
+import { whatsappHref } from '../lib/contact';
+import { faqSchema } from '../lib/schema';
+import { t, type Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const d = t(lang);
+const p = d.pages.contact;
+const f = d.footer;
+const wa = whatsappHref();
+---
+<BaseLayout lang={lang} page="contact" schema={[faqSchema(lang)]}>
+  <PageHero eyebrow={p.eyebrow} title={p.title} sub={p.sub} tone="coral">
+    <div class="mt-10 grid gap-4 sm:grid-cols-3">
+      <div class="rounded-2xl bg-night-800 p-5 ring-1 ring-night-700">
+        <p class="flex items-center gap-2 text-sm text-night-300"><Icon name="Mail" size={18} class="text-cyan" />{f.email}</p>
+        <p class="mt-2 font-semibold">{CONTACT.email ? <a href={`mailto:${CONTACT.email}`} class="hover:text-sun">{CONTACT.email}</a> : <span class="todo">TODO</span>}</p>
+      </div>
+      <div class="rounded-2xl bg-night-800 p-5 ring-1 ring-night-700">
+        <p class="flex items-center gap-2 text-sm text-night-300"><Icon name="Phone" size={18} class="text-cyan" />{f.phone}</p>
+        <p class="mt-2 font-semibold">{CONTACT.phone ? <a href={`tel:${CONTACT.phone.replace(/\s/g, '')}`} class="hover:text-sun">{CONTACT.phone}</a> : <span class="todo">TODO</span>}</p>
+      </div>
+      <div class="rounded-2xl bg-night-800 p-5 ring-1 ring-night-700">
+        <p class="flex items-center gap-2 text-sm text-night-300"><SocialIcon name="whatsapp" size={16} class="text-[#25d366]" />WhatsApp</p>
+        <p class="mt-2 font-semibold">{wa ? <a href={wa} target="_blank" rel="noopener" class="hover:text-sun">{d.common.whatsapp}</a> : <span class="todo">TODO</span>}</p>
+      </div>
+    </div>
+  </PageHero>
+
+  <section class="bg-paper-2 py-14" aria-labelledby="next-title">
+    <div class="container-x">
+      <h2 id="next-title" class="reveal text-2xl font-bold">{p.nextTitle}</h2>
+      <ol class="mt-8 grid gap-6 md:grid-cols-3">
+        {p.next.map((n, i) => (
+          <li class="reveal flex gap-4">
+            <span class:list={['grid h-11 w-11 shrink-0 place-items-center rounded-full border-[3px] bg-paper font-display font-bold', ['border-coral', 'border-cyan', 'border-sun'][i]]}>{i + 1}</span>
+            <div><h3 class="font-display font-bold">{n.title}</h3><p class="muted mt-1">{n.text}</p></div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <QuoteForm lang={lang} />
+  <Faq lang={lang} />
+</BaseLayout>

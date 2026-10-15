@@ -1,0 +1,30 @@
+---
+import Icon from '../ui/Icon.astro';
+import SectionHead from '../ui/SectionHead.astro';
+import ControlPanel from '../ui/ControlPanel.astro';
+import { t, type Lang } from '../../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const w = t(lang).why;
+const tones = ['bg-coral-soft text-coral-ink', 'bg-cyan-soft text-cyan-ink', 'bg-sun-soft text-sun-ink'];
+---
+<section class="bg-paper py-20 lg:py-28" aria-labelledby="why-title">
+  <div class="container-x grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
+    <div class="lg:sticky lg:top-28 lg:self-start">
+      <SectionHead eyebrow={w.eyebrow} title={w.title} sub={w.sub} id="why-title" />
+      <div class="reveal mt-10 hidden max-w-sm lg:block"><ControlPanel lang={lang} /></div>
+    </div>
+    <ol class="grid gap-x-10 gap-y-10 sm:grid-cols-2" id="why-title-list">
+      {w.items.map((it, i) => (
+        <li class="reveal border-t-2 border-ink pt-5">
+          <div class="flex items-center justify-between">
+            <span class:list={['inline-flex h-11 w-11 items-center justify-center rounded-2xl', tones[i % 3]]}><Icon name={it.icon} size={22} /></span>
+            <span class="font-display text-sm font-bold text-ink-soft/60">0{i + 1}</span>
+          </div>
+          <h3 class="mt-4 text-xl font-bold">{it.title}</h3>
+          <p class="muted mt-2">{it.text}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>

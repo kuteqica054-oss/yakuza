@@ -1,0 +1,148 @@
+---
+/**
+ * Isometric arena scene, generated at build time from a simple top-down plan.
+ * Walls are extruded prisms; beams animate with stroke-dashoffset (CSS only).
+ */
+interface Props { alt: string; class?: string }
+const { alt, class: cls = '' } = Astro.props;
+
+const U = 40; // plan unit in px
+const C = Math.cos(Math.PI / 6);
+const S = 0.5;
+const iso = (x: number, y: number, z = 0) => [(x - y) * U * C, (x + y) * U * S - z] as const;
+const pt = (p: readonly [number, number]) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`;
+
+const W = 12, D = 9; // arena size in units
+type Wall = { x: number; y: number; w: number; d: number; h?: number; tone?: 'coral' | 'cyan' | 'sun' };
+const walls: Wall[] = [
+  // back perimeter
+  { x: 0, y: 0, w: W, d: 0.3, h: 44 },
+  { x: 0, y: 0.3, w: 0.3, d: D - 0.3, h: 44 },
+  // maze
+  { x: 2, y: 1.6, w: 0.4, d: 2.8, tone: 'cyan' },
+  { x: 4.2, y: 3, w: 2.6, d: 0.4 },
+  { x: 5.6, y: 0.9, w: 0.4, d: 1.6, tone: 'sun' },
+  { x: 8.6, y: 1.6, w: 2.0, d: 0.4, tone: 'coral' },
+  { x: 7.2, y: 4.2, w: 0.4, d: 2.6 },
+  { x: 2.2, y: 6.2, w: 2.8, d: 0.4, tone: 'coral' },
+  { x: 9.6, y: 5.4, w: 0.4, d: 2.4, tone: 'cyan' },
+  { x: 4.4, y: 7.6, w: 0.4, d: 1.0 },
+  { x: 10.4, y: 3.2, w: 1.0, d: 0.4 },
+  { x: 3.4, y: 4.4, w: 0.4, d: 1.2, tone: 'sun' },
+];
+const H = 30;
+const shapes = walls
+  .map((w) => {
+    const h = w.h ?? H;
+    const A = iso(w.x, w.y), B = iso(w.x + w.w, w.y), Cc = iso(w.x + w.w, w.y + w.d), Dd = iso(w.x, w.y + w.d);
+    const At = iso(w.x, w.y, h), Bt = iso(w.x + w.w, w.y, h), Ct = iso(w.x + w.w, w.y + w.d, h), Dt = iso(w.x, w.y + w.d, h);
+    return {
+      depth: w.x + w.w / 2 + w.y + w.d / 2 + (w.h ? -20 : 0),
+      right: [B, Cc, Ct, Bt].map(pt).join(' '),
+      front: [Cc, Dd, Dt, Ct].map(pt).join(' '),
+      top: [At, Bt, Ct, Dt].map(pt).join(' '),
+      stripe: w.tone ? [iso(w.x + w.w, w.y + w.d, h * 0.45), iso(w.x, w.y + w.d, h * 0.45)] : null,
+      tone: w.tone,
+    };
+  })
+  .sort((a, b) => a.depth - b.depth);
+
+const toneHex = { coral: '#ff5a4e', cyan: '#1fd6c8', sun: '#ffc93c' } as const;
+
+const floor = [iso(0, 0), iso(W, 0), iso(W, D), iso(0, D)].map(pt).join(' ');
+const gridLines: string[] = [];
+for (let i = 1; i < W; i++) gridLines.push(`M${pt(iso(i, 0))}L${pt(iso(i, D))}`);
+for (let j = 1; j < D; j++) gridLines.push(`M${pt(iso(0, j))}L${pt(iso(W, j))}`);
+
+// Players (team tokens) and targets
+const players = [
+  { x: 1.3, y: 5.2, team: 'coral' }, { x: 3.2, y: 8.0, team: 'coral' }, { x: 5.6, y: 5.4, team: 'coral' },
+  { x: 10.6, y: 6.6, team: 'cyan' }, { x: 8.4, y: 3.0, team: 'cyan' }, { x: 11.2, y: 4.6, team: 'cyan' },
+] as const;
+const targets = [
+  { x: 6.6, y: 1.4, c: 'sun' }, { x: 1.0, y: 2.2, c: 'cyan' }, { x: 8.2, y: 7.8, c: 'coral' }, { x: 11.0, y: 1.0, c: 'sun' },
+] as const;
+const PZ = 18; // blaster height
+const beams = [
+  { from: iso(3.2, 8.0, PZ), to: iso(8.2, 7.8, 12), c: '#ff5a4e', delay: 0 },
+  { from: iso(8.4, 3.0, PZ), to: iso(6.6, 1.4, 12), c: '#1fd6c8', delay: 0.7 },
+  { from: iso(5.6, 5.4, PZ), to: iso(10.6, 6.6, PZ), c: '#ff5a4e', delay: 1.3 },
+  { from: iso(11.2, 4.6, PZ), to: iso(1.3, 5.2, PZ), c: '#1fd6c8', delay: 0.3 },
+];
+const toneOf = (c: string) => toneHex[c as keyof typeof toneHex];
+type Item = { depth: number; kind: 'wall' | 'player' | 'target'; i: number };
+const items: Item[] = [
+  ...shapes.map((s, i) => ({ depth: s.depth, kind: 'wall' as const, i })),
+  ...players.map((p, i) => ({ depth: p.x + p.y, kind: 'player' as const, i })),
+  ...targets.map((t, i) => ({ depth: t.x + t.y, kind: 'target' as const, i })),
+].sort((a, b) => a.depth - b.depth);
+const bases = [
+  { x: 1.4, y: 7.6, c: '#ff5a4e' },
+  { x: 10.8, y: 2.4, c: '#1fd6c8' },
+];
+---
+<svg class={cls} viewBox="-330 -58 760 488" role="img" aria-label={alt} xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="ha-glow-c" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#ff5a4e" stop-opacity=".45" /><stop offset="1" stop-color="#ff5a4e" stop-opacity="0" /></radialGradient>
+    <radialGradient id="ha-glow-t" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#1fd6c8" stop-opacity=".45" /><stop offset="1" stop-color="#1fd6c8" stop-opacity="0" /></radialGradient>
+    <filter id="ha-blur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" /></filter>
+  </defs>
+
+  <!-- floor -->
+  <polygon points={floor} fill="#13254f" />
+  <path d={gridLines.join('')} stroke="#9fb0d9" stroke-opacity=".12" stroke-width="1" fill="none" />
+  <polygon points={floor} fill="none" stroke="#2b4682" stroke-width="2" />
+
+  <!-- base glows -->
+  {bases.map((b) => { const [x, y] = iso(b.x, b.y); return (
+    <ellipse cx={x} cy={y} rx="110" ry="60" fill={b.c === '#ff5a4e' ? 'url(#ha-glow-c)' : 'url(#ha-glow-t)'} />
+  ); })}
+
+  <!-- bases (hex pads with dome) -->
+  {bases.map((b) => { const [x, y] = iso(b.x, b.y); return (
+    <g>
+      <ellipse cx={x} cy={y} rx="30" ry="16" fill="#0c1a3d" stroke={b.c} stroke-width="3" />
+      <ellipse class="pulse" cx={x} cy={y} rx="40" ry="22" fill="none" stroke={b.c} stroke-width="1.5" />
+      <path d={`M${x - 12},${y} v-26 a12 7 0 0 1 24 0 v26 Z`} fill="#1d3366" />
+      <ellipse cx={x} cy={y - 26} rx="12" ry="7" fill={b.c} />
+    </g>
+  ); })}
+
+  <!-- walls, targets and players in painter's order -->
+  {items.map((it) => {
+    if (it.kind === 'wall') { const s = shapes[it.i]; return (
+      <g>
+        <polygon points={s.right} fill="#1a2d5c" />
+        <polygon points={s.front} fill="#22386f" />
+        <polygon points={s.top} fill="#3a5698" />
+        {s.stripe && <line x1={s.stripe[0][0]} y1={s.stripe[0][1]} x2={s.stripe[1][0]} y2={s.stripe[1][1]} stroke={toneOf(s.tone!)} stroke-width="3" stroke-linecap="round" />}
+      </g>
+    ); }
+    if (it.kind === 'target') { const tg = targets[it.i]; const [x, y] = iso(tg.x, tg.y); const col = toneOf(tg.c); return (
+      <g>
+        <rect x={x - 2.5} y={y - 22} width="5" height="22" rx="2" fill="#2b4682" />
+        <circle cx={x} cy={y - 30} r="12" fill={col} opacity=".35" filter="url(#ha-blur)" />
+        <circle cx={x} cy={y - 30} r="10" fill="#0c1a3d" stroke={col} stroke-width="3" />
+        <circle cx={x} cy={y - 30} r="4" fill={col} />
+        <circle class="pulse" style={`animation-delay:${it.i * 0.5}s`} cx={x} cy={y - 30} r="15" fill="none" stroke={col} stroke-width="1.5" />
+      </g>
+    ); }
+    const p = players[it.i]; const [x, y] = iso(p.x, p.y); const col = p.team === 'coral' ? '#ff5a4e' : '#1fd6c8'; return (
+      <g>
+        <ellipse cx={x} cy={y} rx="10" ry="5" fill="#08122c" opacity=".6" />
+        <rect x={x - 7} y={y - 22} width="14" height="20" rx="7" fill={col} />
+        <circle cx={x} cy={y - 28} r="7" fill="#fbf8f2" />
+        <rect x={x - 5} y={y - 30} width="10" height="4" rx="2" fill="#0c1a3d" />
+      </g>
+    );
+  })}
+
+  <!-- beams -->
+  {beams.map((b) => (
+    <g>
+      <line x1={b.from[0]} y1={b.from[1]} x2={b.to[0]} y2={b.to[1]} stroke={b.c} stroke-width="6" stroke-opacity=".18" stroke-linecap="round" />
+      <line x1={b.from[0]} y1={b.from[1]} x2={b.to[0]} y2={b.to[1]} stroke={b.c} stroke-width="1.5" stroke-opacity=".55" stroke-linecap="round" />
+      <line class="beam" style={`animation-delay:-${b.delay}s`} x1={b.from[0]} y1={b.from[1]} x2={b.to[0]} y2={b.to[1]} stroke="#fff" stroke-width="2.5" stroke-linecap="round" />
+    </g>
+  ))}
+</svg>

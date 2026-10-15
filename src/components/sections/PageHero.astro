@@ -1,0 +1,20 @@
+---
+import LaserDivider from '../ui/LaserDivider.astro';
+interface Props { eyebrow: string; title: string; sub?: string; tone?: 'coral' | 'cyan' | 'sun' }
+const { eyebrow, title, sub, tone = 'cyan' } = Astro.props;
+const toneCls = { coral: 'text-coral', cyan: 'text-cyan', sun: 'text-sun' }[tone];
+---
+<section class="scene-dark arena-grid relative overflow-hidden">
+  <svg aria-hidden="true" class="pointer-events-none absolute inset-0 h-full w-full" preserveAspectRatio="none" viewBox="0 0 1200 400">
+    <line x1="700" y1="400" x2="1200" y2="40" stroke="#ff5a4e" stroke-width="1.5" opacity=".5" vector-effect="non-scaling-stroke" />
+    <line x1="760" y1="0" x2="1200" y2="330" stroke="#1fd6c8" stroke-width="1.5" opacity=".5" vector-effect="non-scaling-stroke" />
+  </svg>
+  <div class="container-x relative pt-14 pb-16 sm:pt-20 sm:pb-20 lg:pb-24">
+    <div class="max-w-3xl">
+      <p class:list={['eyebrow', toneCls]}>{eyebrow}</p>
+      <h1 class="mt-5 text-4xl font-bold sm:text-5xl lg:text-[3.4rem] lg:leading-[1.08]">{title}</h1>
+      {sub && <p class="lead mt-6 text-night-200">{sub}</p>}
+      <slot />
+    </div>
+  </div>
+</section>

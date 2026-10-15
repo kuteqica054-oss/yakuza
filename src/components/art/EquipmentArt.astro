@@ -1,0 +1,129 @@
+---
+/** Friendly, toy-like equipment illustrations. One visual language: navy outline, rounded forms, team-colour lights. */
+interface Props { id: string; alt: string; class?: string }
+const { id, alt, class: cls = '' } = Astro.props;
+const N = '#0c1a3d', P = '#fbf8f2', CO = '#ff5a4e', CY = '#1fd6c8', SU = '#ffc93c', LI = '#8be36a';
+const sw = 4;
+---
+<svg class={cls} viewBox="0 0 320 240" role="img" aria-label={alt} xmlns="http://www.w3.org/2000/svg" fill="none" stroke-linejoin="round" stroke-linecap="round">
+  {id === 'blaster' && (
+    <g>
+      <ellipse cx="170" cy="214" rx="110" ry="10" fill={N} opacity=".08" />
+      <line class="beam beam-slow" x1="288" y1="102" x2="330" y2="102" stroke={CY} stroke-width="4" />
+      <rect x="104" y="116" width="42" height="84" rx="20" fill={CO} stroke={N} stroke-width={sw} transform="rotate(-14 125 158)" />
+      <rect x="114" y="130" width="22" height="8" rx="4" fill={N} opacity=".25" transform="rotate(-14 125 158)" />
+      <rect x="66" y="72" width="200" height="60" rx="30" fill={P} stroke={N} stroke-width={sw} />
+      <path d="M150 72 h80 a30 30 0 0 1 30 26" stroke={N} stroke-width="2" opacity=".2" />
+      <circle cx="80" cy="102" r="24" fill={SU} stroke={N} stroke-width={sw} />
+      <circle cx="80" cy="102" r="8" fill={N} />
+      <rect x="104" y="108" width="122" height="10" rx="5" fill={CO} stroke={N} stroke-width="3" />
+      <circle cx="120" cy="113" r="2.5" fill={P} /><circle cx="134" cy="113" r="2.5" fill={P} /><circle cx="148" cy="113" r="2.5" fill={P} />
+      <rect x="128" y="48" width="78" height="32" rx="10" fill={N} stroke={N} stroke-width={sw} />
+      <rect x="138" y="58" width="34" height="5" rx="2.5" fill={CY} />
+      <rect x="138" y="67" width="22" height="5" rx="2.5" fill={CY} opacity=".6" />
+      <circle cx="190" cy="64" r="7" fill={CO} />
+      <circle cx="264" cy="102" r="28" fill={N} stroke={N} stroke-width={sw} />
+      <circle cx="264" cy="102" r="17" fill={CY} />
+      <circle class="pulse" cx="264" cy="102" r="22" stroke={CY} stroke-width="2" />
+      <circle cx="258" cy="96" r="5" fill={P} />
+    </g>
+  )}
+
+  {id === 'vest' && (
+    <g>
+      <ellipse cx="150" cy="222" rx="110" ry="9" fill={N} opacity=".08" />
+      <path d="M70 62 Q80 50 96 56 L112 66 Q132 76 152 66 L168 56 Q184 50 194 62 L206 102 Q210 122 202 138 V194 Q202 210 186 210 H78 Q62 210 62 194 V138 Q54 122 58 102 Z" fill={N} stroke={N} stroke-width={sw} />
+      <path d="M112 66 Q132 104 152 66" fill={P} stroke={N} stroke-width={sw} />
+      <rect x="62" y="160" width="140" height="14" fill={SU} stroke={N} stroke-width="3" />
+      <rect x="122" y="156" width="20" height="22" rx="5" fill={P} stroke={N} stroke-width="3" />
+      <circle cx="132" cy="122" r="20" fill={CO} stroke={P} stroke-width="4" />
+      <circle class="pulse" cx="132" cy="122" r="27" stroke={CO} stroke-width="2" />
+      <circle cx="126" cy="116" r="5" fill={P} opacity=".8" />
+      <circle cx="88" cy="76" r="11" fill={CO} stroke={P} stroke-width="3" />
+      <circle cx="176" cy="76" r="11" fill={CO} stroke={P} stroke-width="3" />
+      <circle cx="132" cy="194" r="7" fill={CO} />
+      <ellipse cx="262" cy="150" rx="40" ry="16" stroke={N} stroke-width="12" />
+      <ellipse cx="262" cy="150" rx="40" ry="16" stroke={CY} stroke-width="5" />
+      <path d="M248 166 a14 14 0 0 1 28 0 v6 h-28 Z" fill={P} stroke={N} stroke-width={sw} />
+      <circle cx="262" cy="166" r="7" fill={CY} />
+      <circle class="pulse" cx="262" cy="166" r="12" stroke={CY} stroke-width="2" />
+    </g>
+  )}
+
+  {id === 'target' && (
+    <g>
+      <rect x="146" y="14" width="28" height="24" rx="6" fill={P} stroke={N} stroke-width={sw} />
+      <circle cx="160" cy="124" r="92" fill={N} stroke={N} stroke-width={sw} />
+      {Array.from({ length: 12 }, (_, i) => {
+        const a = (i / 12) * Math.PI * 2; const x = 160 + Math.cos(a) * 80; const y = 124 + Math.sin(a) * 80;
+        return <circle cx={x} cy={y} r="4.5" fill={i % 3 === 0 ? SU : CY} />;
+      })}
+      <circle cx="160" cy="124" r="66" fill={P} stroke={N} stroke-width="3" />
+      <circle cx="160" cy="124" r="50" fill={CO} stroke={N} stroke-width="3" />
+      <circle cx="160" cy="124" r="32" fill={P} stroke={N} stroke-width="3" />
+      <circle cx="160" cy="124" r="16" fill={SU} stroke={N} stroke-width="3" />
+      <circle class="pulse" cx="160" cy="124" r="100" stroke={CY} stroke-width="2" />
+      <path d="M118 84 a58 58 0 0 1 30 -18" stroke={P} stroke-width="5" opacity=".6" />
+    </g>
+  )}
+
+  {id === 'base' && (
+    <g>
+      <ellipse cx="160" cy="206" rx="104" ry="22" fill={CY} opacity=".18" />
+      <path d="M78 196 L104 178 H216 L242 196 L216 214 H104 Z" fill={N} stroke={N} stroke-width={sw} />
+      <path d="M96 196 L112 186 H208 L224 196" stroke={CY} stroke-width="3" />
+      <rect x="122" y="84" width="76" height="108" rx="16" fill={P} stroke={N} stroke-width={sw} />
+      <rect x="122" y="118" width="76" height="12" fill={CY} stroke={N} stroke-width="3" />
+      <rect x="122" y="148" width="76" height="12" fill={CO} stroke={N} stroke-width="3" />
+      <path d="M124 88 a36 36 0 0 1 72 0 Z" fill={SU} stroke={N} stroke-width={sw} />
+      <path d="M140 74 a22 22 0 0 1 16 -12" stroke={P} stroke-width="5" opacity=".7" />
+      <line x1="160" y1="52" x2="160" y2="30" stroke={N} stroke-width={sw} />
+      <circle class="blink" cx="160" cy="26" r="7" fill={CO} stroke={N} stroke-width="3" />
+      <circle class="pulse" cx="160" cy="68" r="56" stroke={SU} stroke-width="2" />
+    </g>
+  )}
+
+  {id === 'charger' && (
+    <g>
+      <ellipse cx="160" cy="222" rx="120" ry="9" fill={N} opacity=".08" />
+      <rect x="38" y="42" width="244" height="160" rx="20" fill={P} stroke={N} stroke-width={sw} />
+      <rect x="38" y="42" width="244" height="26" rx="13" fill={N} />
+      <circle class="blink" cx="58" cy="55" r="5" fill={LI} />
+      <rect x="72" y="52" width="60" height="6" rx="3" fill={P} opacity=".4" />
+      {[0, 1, 2, 3].map((i) => {
+        const x = 54 + i * 56; const col = i % 2 ? CY : CO; const lvl = [4, 3, 4, 2][i];
+        return (
+          <g>
+            <rect x={x} y="78" width="44" height="86" rx="12" fill={N} opacity=".9" />
+            <rect x={x + 9} y="86" width="26" height="54" rx="13" fill={P} stroke={N} stroke-width="3" />
+            <circle cx={x + 22} cy="94" r="7" fill={col} />
+            <rect x={x + 16} y="120" width="12" height="24" rx="5" fill={col} stroke={N} stroke-width="2.5" />
+            {[0, 1, 2, 3].map((k) => <rect x={x + 4 + k * 10} y="174" width="7" height="14" rx="2" fill={k < lvl ? LI : N} opacity={k < lvl ? 1 : 0.15} />)}
+          </g>
+        );
+      })}
+    </g>
+  )}
+
+  {id === 'control' && (
+    <g>
+      <ellipse cx="160" cy="224" rx="120" ry="8" fill={N} opacity=".08" />
+      <rect x="150" y="22" width="148" height="96" rx="12" fill={N} stroke={N} stroke-width={sw} />
+      <rect x="162" y="34" width="124" height="72" rx="6" fill="#13254f" />
+      <rect x="172" y="46" width="64" height="10" rx="5" fill={CO} />
+      <rect x="172" y="64" width="54" height="10" rx="5" fill={CY} />
+      <rect x="172" y="84" width="104" height="4" rx="2" fill={P} opacity=".25" />
+      <text x="276" y="56" text-anchor="end" fill={SU} font-family="Unbounded Variable, sans-serif" font-size="11" font-weight="700" stroke="none">07:42</text>
+      <rect x="218" y="118" width="12" height="22" fill={N} />
+      <rect x="198" y="138" width="52" height="8" rx="4" fill={N} />
+      <rect x="22" y="94" width="176" height="116" rx="18" fill={P} stroke={N} stroke-width={sw} />
+      <rect x="34" y="106" width="152" height="92" rx="8" fill={N} />
+      <rect x="44" y="116" width="62" height="30" rx="7" fill={CO} />
+      <rect x="114" y="116" width="62" height="30" rx="7" fill={CY} />
+      <rect x="44" y="154" width="90" height="8" rx="4" fill={P} opacity=".35" />
+      <rect x="44" y="168" width="70" height="8" rx="4" fill={P} opacity=".2" />
+      <rect x="138" y="160" width="38" height="28" rx="14" fill={LI} />
+      <path d="M152 167 l10 7 -10 7 Z" fill={N} stroke="none" />
+    </g>
+  )}
+</svg>

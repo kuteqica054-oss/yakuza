@@ -1,0 +1,37 @@
+---
+import Icon from '../ui/Icon.astro';
+import SectionHead from '../ui/SectionHead.astro';
+import Todo from '../ui/Todo.astro';
+import { t, type Lang } from '../../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const s = t(lang).safety;
+---
+<section class="relative bg-paper-2 py-20 lg:py-28" aria-labelledby="safety-title">
+  <div class="container-x grid gap-12 lg:grid-cols-[1fr_22rem] lg:gap-16">
+    <div>
+      <SectionHead eyebrow={s.eyebrow} title={s.title} sub={s.sub} tone="cyan" id="safety-title" />
+      <dl class="mt-12 grid gap-px overflow-hidden rounded-[var(--radius-blob)] bg-paper-3 sm:grid-cols-2">
+        {s.items.map((it) => (
+          <div class="reveal bg-paper p-6 sm:p-7">
+            <dt class="flex items-center gap-3 font-display text-lg font-bold">
+              <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-cyan-soft text-cyan-ink"><Icon name={it.icon} size={20} /></span>
+              {it.title}
+            </dt>
+            <dd class="muted mt-3">{it.text}{it.todo && <span class="mt-2 block text-sm"><Todo text={it.todo} /></span>}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+    <aside class="reveal lg:pt-36" aria-label={s.briefing.title}>
+      <div class="relative rotate-[-1.5deg] rounded-[var(--radius-blob)] bg-night-900 p-7 text-paper shadow-[0_30px_60px_-30px_rgb(8_18_44/.7)]">
+        <span class="absolute -top-3 left-8 rounded-full bg-sun px-3 py-1 text-xs font-bold text-ink">{s.briefing.title}</span>
+        <ol class="mt-3 grid gap-4">
+          {s.briefing.rules.map((r, i) => (
+            <li class="flex gap-3"><span class:list={['grid h-7 w-7 shrink-0 place-items-center rounded-full font-display text-xs font-bold text-night-950', ['bg-coral', 'bg-cyan', 'bg-sun', 'bg-lime'][i]]}>{i + 1}</span><span class="text-night-200">{r}</span></li>
+          ))}
+        </ol>
+      </div>
+    </aside>
+  </div>
+</section>

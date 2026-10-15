@@ -1,0 +1,10 @@
+---
+interface Props { eyebrow?: string; title: string; sub?: string; dark?: boolean; align?: 'left' | 'center'; tone?: 'coral' | 'cyan' | 'sun'; as?: 'h1' | 'h2'; id?: string; class?: string }
+const { eyebrow, title, sub, dark = false, align = 'left', tone = 'coral', as: Tag = 'h2', id, class: cls = '' } = Astro.props;
+const toneCls = dark ? { coral: 'text-coral', cyan: 'text-cyan', sun: 'text-sun' }[tone] : { coral: 'text-coral-ink', cyan: 'text-cyan-ink', sun: 'text-sun-ink' }[tone];
+---
+<div class:list={['reveal max-w-3xl', align === 'center' && 'mx-auto text-center', cls]}>
+  {eyebrow && <p class:list={['eyebrow', toneCls]}>{eyebrow}</p>}
+  <Tag id={id} class:list={[Tag === 'h1' ? 'text-4xl sm:text-5xl lg:text-6xl font-bold' : 'h-section', eyebrow && 'mt-4']}>{title}</Tag>
+  {sub && <p class:list={['lead mt-5', dark ? 'text-night-200' : 'text-ink-soft']}>{sub}</p>}
+</div>

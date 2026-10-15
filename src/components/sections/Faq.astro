@@ -1,0 +1,27 @@
+---
+import Icon from '../ui/Icon.astro';
+import SectionHead from '../ui/SectionHead.astro';
+import Todo from '../ui/Todo.astro';
+import { t, type Lang } from '../../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const f = t(lang).faq;
+---
+<section class="bg-paper py-20 lg:py-28" aria-labelledby="faq-title" id="sss">
+  <div class="container-x grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+    <div class="lg:sticky lg:top-28 lg:self-start">
+      <SectionHead eyebrow={f.eyebrow} title={f.title} sub={f.sub} tone="cyan" id="faq-title" />
+    </div>
+    <div class="reveal divide-y-2 divide-paper-3 border-y-2 border-paper-3">
+      {f.items.map((it) => (
+        <details class="group py-1" name="faq">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-5 font-display text-lg font-semibold [&::-webkit-details-marker]:hidden">
+            <span>{it.q}</span>
+            <span class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-paper-2 transition group-open:rotate-45 group-open:bg-coral group-open:text-night-950"><Icon name="Plus" size={18} /></span>
+          </summary>
+          <p class="muted max-w-2xl pb-6 pr-12"><Todo text={it.a} /></p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>

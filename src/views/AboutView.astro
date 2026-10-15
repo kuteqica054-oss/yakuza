@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/sections/PageHero.astro';
+import CtaBand from '../components/sections/CtaBand.astro';
+import PhotoSlot from '../components/ui/PhotoSlot.astro';
+import { BRAND, CONTACT } from '../config/site';
+import { t, type Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const d = t(lang);
+const p = d.pages.about;
+const f = d.footer;
+const rows: [string, string][] = [
+  [p.legalName, BRAND.legalName],
+  [f.taxInfo, CONTACT.taxOffice && CONTACT.taxNumber ? `${CONTACT.taxOffice} / ${CONTACT.taxNumber}` : ''],
+  [f.mersis, CONTACT.mersis],
+  [f.address, CONTACT.address],
+  [f.email, CONTACT.email],
+  [f.phone, CONTACT.phone],
+];
+---
+<BaseLayout lang={lang} page="about">
+  <PageHero eyebrow={p.eyebrow} title={p.title} tone="coral" />
+  <section class="bg-paper py-16 lg:py-24">
+    <div class="container-x grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
+      <div class="reveal grid gap-5 text-lg leading-relaxed">
+        {p.intro.map((para, i) => <p class:list={[i === 0 && 'font-display text-xl font-semibold leading-snug sm:text-2xl']}>{para}</p>)}
+      </div>
+      <!-- PHOTO: team / workshop photo, 1200×1200 px (or 1600×1000) -->
+      <PhotoSlot label={d.common.photoSlot} note={p.photoNote} ratio="aspect-[4/3]" class="reveal" />
+    </div>
+  </section>
+  <section class="bg-paper-2 py-16 lg:py-24" aria-labelledby="values-title">
+    <div class="container-x">
+      <h2 id="values-title" class="reveal h-section">{p.valuesTitle}</h2>
+      <ol class="mt-10 grid gap-px overflow-hidden rounded-[var(--radius-blob)] bg-paper-3 sm:grid-cols-2">
+        {p.values.map((v, i) => (
+          <li class="reveal bg-paper p-7 sm:p-9">
+            <span class:list={['inline-block h-3 w-10 rounded-full', ['bg-coral', 'bg-cyan', 'bg-sun', 'bg-night-900'][i]]}></span>
+            <h3 class="mt-5 text-xl font-bold">{v.title}</h3>
+            <p class="muted mt-2">{v.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+  <section class="bg-paper py-16 lg:py-20" aria-labelledby="company-title">
+    <div class="container-x max-w-3xl">
+      <h2 id="company-title" class="reveal text-2xl font-bold">{p.companyTitle}</h2>
+      <dl class="reveal mt-6 divide-y divide-paper-3 border-y border-paper-3">
+        {rows.map(([k, v]) => <div class="grid gap-1 py-3 sm:grid-cols-[14rem_1fr]"><dt class="font-semibold">{k}</dt><dd class="text-ink-soft">{v || <span class="todo">TODO</span>}</dd></div>)}
+      </dl>
+    </div>
+  </section>
+  <CtaBand lang={lang} />
+</BaseLayout>

@@ -1,0 +1,71 @@
+---
+import ThemeArt from '../art/ThemeArt.astro';
+import Icon from '../ui/Icon.astro';
+import SectionHead from '../ui/SectionHead.astro';
+import LaserDivider from '../ui/LaserDivider.astro';
+import { themePalettes } from '../../lib/themes';
+import { t, routes, type Lang } from '../../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const d = t(lang);
+const th = d.themes;
+---
+<section class="scene-dark relative overflow-hidden py-20 lg:py-28" aria-labelledby="themes-title" data-slider>
+  <LaserDivider variant="top" />
+  <div class="container-x">
+    <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+      <SectionHead eyebrow={th.eyebrow} title={th.title} sub={th.sub} dark tone="sun" id="themes-title" />
+      <div class="reveal flex shrink-0 items-center gap-3">
+        <button type="button" class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-night-800 text-paper transition hover:bg-night-700 disabled:opacity-40" data-prev aria-label={d.common.prev}><Icon name="ArrowLeft" size={20} /></button>
+        <button type="button" class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-paper text-ink transition hover:bg-sun disabled:opacity-40" data-next aria-label={d.common.next}><Icon name="ArrowRight" size={20} /></button>
+      </div>
+    </div>
+  </div>
+
+  <ul class="mt-12 flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth px-4 pb-6 sm:px-6 lg:px-[max(2rem,calc((100vw_-_1200px)/2_+_2rem))] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+    data-track tabindex="0" aria-label={th.title}>
+    {th.items.map((it) => (
+      <li class="w-[85%] shrink-0 snap-start sm:w-[26rem] lg:w-[30rem]">
+        <article class="group h-full overflow-hidden rounded-[var(--radius-blob)] bg-night-800 ring-1 ring-night-700 transition hover:ring-night-300/60">
+          <div class="aspect-[400/260] overflow-hidden">
+            <ThemeArt id={it.id} alt={it.alt} class="h-full w-full transition-transform duration-500 group-hover:scale-[1.03]" />
+          </div>
+          <div class="p-6">
+            <p class="text-sm font-semibold text-cyan">{it.tagline}</p>
+            <h3 class="mt-1.5 text-2xl font-bold">{it.name}</h3>
+            <p class="mt-3 text-night-200">{it.text}</p>
+            <div class="mt-5 flex items-center gap-3">
+              <span class="text-xs font-bold text-night-300">{th.paletteLabel}</span>
+              <span class="flex gap-1.5">{themePalettes[it.id].map((c) => <span class="h-5 w-5 rounded-full ring-2 ring-night-900" style={`background:${c}`}></span>)}</span>
+            </div>
+          </div>
+        </article>
+      </li>
+    ))}
+  </ul>
+
+  <div class="container-x mt-6">
+    <a href={routes.themes[lang]} class="link-arrow text-sun">{th.cta}<Icon name="ArrowRight" size={18} /></a>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-slider]').forEach((root) => {
+    const track = root.querySelector<HTMLElement>('[data-track]')!;
+    const prev = root.querySelector<HTMLButtonElement>('[data-prev]')!;
+    const next = root.querySelector<HTMLButtonElement>('[data-next]')!;
+    const step = () => (track.querySelector('li')?.getBoundingClientRect().width ?? 300) + 20;
+    const update = () => {
+      prev.disabled = track.scrollLeft < 8;
+      next.disabled = track.scrollLeft + track.clientWidth >= track.scrollWidth - 8;
+    };
+    prev.addEventListener('click', () => track.scrollBy({ left: -step() }));
+    next.addEventListener('click', () => track.scrollBy({ left: step() }));
+    track.addEventListener('scroll', update, { passive: true });
+    track.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') { e.preventDefault(); track.scrollBy({ left: step() }); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); track.scrollBy({ left: -step() }); }
+    });
+    update();
+  });
+</script>

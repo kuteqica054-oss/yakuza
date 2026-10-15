@@ -1,0 +1,81 @@
+---
+import Logo from './ui/Logo.astro';
+import SocialIcon from './ui/SocialIcon.astro';
+import Icon from './ui/Icon.astro';
+import LangSwitch from './LangSwitch.astro';
+import LaserDivider from './ui/LaserDivider.astro';
+import { BRAND, CONTACT, SOCIAL } from '../config/site';
+import { whatsappHref } from '../lib/contact';
+import { t, routes, type Lang, type PageId } from '../i18n';
+interface Props { lang: Lang; page: PageId | 'notFound' }
+const { lang, page } = Astro.props;
+const d = t(lang);
+const f = d.footer;
+const items = d.nav.items as { page: PageId; label: string }[];
+const socials = [
+  { key: 'instagram', label: 'Instagram', href: SOCIAL.instagram },
+  { key: 'youtube', label: 'YouTube', href: SOCIAL.youtube },
+  { key: 'linkedin', label: 'LinkedIn', href: SOCIAL.linkedin },
+  { key: 'tiktok', label: 'TikTok', href: SOCIAL.tiktok },
+] as const;
+const wa = whatsappHref();
+const year = new Date().getFullYear();
+---
+<footer class="scene-dark relative overflow-hidden">
+  <LaserDivider variant="top" />
+  <div class="container-x grid gap-12 pt-16 pb-10 lg:grid-cols-[1.3fr_1fr_1fr_1.2fr]">
+    <div>
+      <Logo dark />
+      <p class="muted mt-5 max-w-xs">{f.tagline}</p>
+      <div class="mt-6"><LangSwitch lang={lang} page={page} label={d.nav.lang} /></div>
+    </div>
+
+    <nav aria-label={f.pages}>
+      <h2 class="font-sans text-sm font-bold text-sun">{f.pages}</h2>
+      <ul class="mt-4 grid gap-2">
+        <li><a class="text-night-200 hover:text-paper" href={routes.home[lang]}>{d.nav.home}</a></li>
+        {items.slice(0, 4).map((it) => <li><a class="text-night-200 hover:text-paper" href={routes[it.page][lang]}>{it.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <nav aria-label={f.company}>
+      <h2 class="font-sans text-sm font-bold text-sun">{f.company}</h2>
+      <ul class="mt-4 grid gap-2">
+        {items.slice(4).map((it) => <li><a class="text-night-200 hover:text-paper" href={routes[it.page][lang]}>{it.label}</a></li>)}
+        <li><a class="text-night-200 hover:text-paper" href={routes.privacy[lang]}>{f.privacy}</a></li>
+        <li><a class="text-night-200 hover:text-paper" href={routes.terms[lang]}>{f.terms}</a></li>
+      </ul>
+    </nav>
+
+    <div>
+      <h2 class="font-sans text-sm font-bold text-sun">{f.contact}</h2>
+      <dl class="mt-4 grid gap-3 text-night-200">
+        <div class="flex gap-3"><Icon name="Mail" size={20} class="mt-0.5 shrink-0 text-cyan" /><dt class="sr-only">{f.email}</dt>
+          <dd>{CONTACT.email ? <a class="hover:text-paper" href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a> : <span class="todo">TODO: {f.email}</span>}</dd></div>
+        <div class="flex gap-3"><Icon name="Phone" size={20} class="mt-0.5 shrink-0 text-cyan" /><dt class="sr-only">{f.phone}</dt>
+          <dd>{CONTACT.phone ? <a class="hover:text-paper" href={`tel:${CONTACT.phone.replace(/\s/g, '')}`}>{CONTACT.phone}</a> : <span class="todo">TODO: {f.phone}</span>}</dd></div>
+        <div class="flex gap-3"><Icon name="MapPin" size={20} class="mt-0.5 shrink-0 text-cyan" /><dt class="sr-only">{f.address}</dt>
+          <dd>{CONTACT.address || <span class="todo">TODO: {f.address}</span>}</dd></div>
+      </dl>
+      <a href={wa || `${routes.contact[lang]}#teklif`} target={wa ? '_blank' : undefined} rel={wa ? 'noopener' : undefined}
+        class="mt-5 inline-flex items-center gap-2 rounded-full bg-[#25d366] px-4 py-2.5 font-bold text-night-950 hover:brightness-105">
+        <SocialIcon name="whatsapp" size={18} /> {d.common.whatsapp}
+      </a>
+      <h2 class="sr-only">{f.social}</h2>
+      <ul class="mt-6 flex gap-2">
+        {socials.map((s) => (
+          <li><a href={s.href} aria-label={s.label} rel="noopener" target={s.href !== '#' ? '_blank' : undefined}
+            class="inline-flex h-11 w-11 items-center justify-center rounded-full bg-night-800 text-night-200 transition-colors hover:bg-paper hover:text-ink">
+            <SocialIcon name={s.key} size={18} /></a></li>
+        ))}
+      </ul>
+    </div>
+  </div>
+
+  <div class="border-t border-night-800">
+    <div class="container-x flex flex-col gap-3 py-6 text-sm text-night-300 md:flex-row md:items-center md:justify-between">
+      <p>© {year} {BRAND.legalName} {f.rights}</p>
+      <p>{f.taxInfo}: {CONTACT.taxOffice && CONTACT.taxNumber ? `${CONTACT.taxOffice} / ${CONTACT.taxNumber}` : <span class="todo">TODO</span>} · {f.mersis}: {CONTACT.mersis || <span class="todo">TODO</span>}</p>
+    </div>
+  </div>
+</footer>

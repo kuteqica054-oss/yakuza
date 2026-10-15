@@ -1,0 +1,61 @@
+---
+import Icon from '../ui/Icon.astro';
+import Todo from '../ui/Todo.astro';
+import SectionHead from '../ui/SectionHead.astro';
+import { t, routes, type Lang } from '../../i18n';
+interface Props { lang: Lang; variant?: 'compact' | 'detailed'; showHead?: boolean }
+const { lang, variant = 'compact', showHead = true } = Astro.props;
+const d = t(lang);
+const p = d.process;
+const det = d.pages.turnkey;
+const nodeTone = ['border-coral', 'border-cyan', 'border-sun'];
+---
+<section id="surec" class="relative bg-paper-2 py-20 lg:py-28" aria-labelledby="process-title">
+  <div class="container-x">
+    {showHead && (
+      <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+        <SectionHead eyebrow={p.eyebrow} title={p.title} sub={p.sub} tone="cyan" id="process-title" />
+        {variant === 'compact' && <a href={routes.turnkey[lang]} class="link-arrow reveal shrink-0 text-ink">{p.cta}<Icon name="ArrowRight" size={18} /></a>}
+      </div>
+    )}
+
+    {variant === 'compact' ? (
+      <ol class="relative mt-14 grid gap-8 lg:grid-cols-7 lg:gap-4">
+        <span aria-hidden="true" class="absolute left-[1.35rem] top-2 bottom-2 w-0.5 bg-gradient-to-b from-coral via-cyan to-sun lg:left-0 lg:right-0 lg:top-[1.35rem] lg:bottom-auto lg:h-0.5 lg:w-auto lg:bg-gradient-to-r"></span>
+        {p.steps.map((s, i) => (
+          <li class="reveal relative grid grid-cols-[2.75rem_1fr] gap-4 lg:block" style={`transition-delay:${i * 60}ms`}>
+            <span class:list={['relative z-10 flex h-11 w-11 items-center justify-center rounded-full border-[3px] bg-paper font-display text-sm font-bold', nodeTone[i % 3]]}>{i + 1}</span>
+            <div class="lg:mt-5">
+              <Icon name={s.icon} size={22} class="text-ink-soft hidden lg:block" />
+              <h3 class="text-lg font-bold lg:mt-3 lg:text-base">{s.title}</h3>
+              <p class="muted mt-1.5 text-[0.95rem] lg:text-sm">{s.text}</p>
+              <p class="mt-2 text-xs font-semibold text-ink-soft">{d.common.duration}: <Todo text={s.duration} /></p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    ) : (
+      <ol class="relative mt-4 grid gap-6">
+        {p.steps.map((s, i) => (
+          <li class="reveal grid gap-5 rounded-[var(--radius-blob)] bg-paper p-6 ring-1 ring-paper-3 md:grid-cols-[auto_1fr] md:p-8">
+            <div class="flex items-center gap-4 md:flex-col md:items-start">
+              <span class:list={['flex h-14 w-14 items-center justify-center rounded-2xl border-[3px] font-display text-lg font-bold', nodeTone[i % 3]]}>{String(i + 1).padStart(2, '0')}</span>
+              <Icon name={s.icon} size={26} class="text-ink-soft" />
+            </div>
+            <div>
+              <div class="flex flex-wrap items-baseline justify-between gap-2">
+                <h2 class="text-2xl font-bold">{s.title}</h2>
+                <p class="text-sm font-semibold text-ink-soft">{d.common.duration}: <Todo text={s.duration} /></p>
+              </div>
+              <dl class="mt-5 grid gap-5 md:grid-cols-3">
+                <div><dt class="text-xs font-bold text-coral-ink">{det.stepLabels.we}</dt><dd class="mt-1.5">{s.text}</dd></div>
+                <div><dt class="text-xs font-bold text-cyan-ink">{det.stepLabels.you}</dt><dd class="muted mt-1.5"><Todo text={det.details[i].you} /></dd></div>
+                <div><dt class="text-xs font-bold text-sun-ink">{det.stepLabels.out}</dt><dd class="muted mt-1.5">{det.details[i].out}</dd></div>
+              </dl>
+            </div>
+          </li>
+        ))}
+      </ol>
+    )}
+  </div>
+</section>

@@ -1,0 +1,89 @@
+---
+import Icon from '../ui/Icon.astro';
+import SectionHead from '../ui/SectionHead.astro';
+import { CALC } from '../../config/site';
+import { estimate } from '../../lib/calc';
+import { t, routes, locales, fmtNumber, type Lang } from '../../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const c = t(lang).calc;
+const price = CALC.price[lang];
+const init = { area: CALC.area.default, hours: CALC.hours.default, price: price.default, occupancy: CALC.occupancy.default };
+const r = estimate(init);
+const money = (n: number) => fmtNumber(lang, Math.round(n), { style: 'currency', currency: price.currency, maximumFractionDigits: 0 });
+const currencySymbol = new Intl.NumberFormat(locales[lang].intl, { style: 'currency', currency: price.currency }).formatToParts(0).find((p) => p.type === 'currency')?.value;
+const assumptions = c.assumptions
+  .replace('{slot}', String(CALC.slotMinutes)).replace('{m2}', String(CALC.m2PerPlayer))
+  .replace('{max}', String(CALC.maxPlayers)).replace('{days}', String(CALC.daysPerMonth));
+const fields = [
+  { key: 'area', label: c.area, unit: c.areaUnit, ...CALC.area, value: init.area },
+  { key: 'hours', label: c.hours, unit: c.hoursUnit, ...CALC.hours, value: init.hours },
+  { key: 'price', label: c.price, unit: currencySymbol, ...price, value: init.price },
+  { key: 'occupancy', label: c.occupancy, unit: '%', ...CALC.occupancy, value: init.occupancy },
+];
+const cfg = JSON.stringify({ calc: CALC, intl: locales[lang].intl, currency: price.currency });
+---
+<section class="bg-paper py-20 lg:py-28" aria-labelledby="calc-title">
+  <div class="container-x">
+    <SectionHead eyebrow={c.eyebrow} title={c.title} sub={c.sub} tone="sun" id="calc-title" />
+    <form class="reveal mt-12 grid overflow-hidden rounded-[var(--radius-blob)] ring-1 ring-paper-3 lg:grid-cols-[1.1fr_1fr]" data-calc={cfg} onsubmit="return false" aria-labelledby="calc-title">
+      <div class="grid gap-7 bg-white p-6 sm:p-10">
+        {fields.map((f) => (
+          <div>
+            <div class="flex items-baseline justify-between gap-4">
+              <label for={`calc-${f.key}`} class="font-semibold">{f.label}</label>
+              <span class="font-display text-lg font-bold tabular-nums"><output for={`calc-${f.key}`} data-out={f.key}>{fmtNumber(lang, f.value)}</output> <span class="text-sm text-ink-soft">{f.unit}</span></span>
+            </div>
+            <input id={`calc-${f.key}`} name={f.key} type="range" min={f.min} max={f.max} step={f.step} value={f.value}
+              class="calc-range mt-3 w-full" />
+          </div>
+        ))}
+      </div>
+      <div class="scene-dark arena-grid relative flex flex-col justify-between gap-8 p-6 sm:p-10">
+        <dl class="grid grid-cols-2 gap-6">
+          <div><dt class="text-sm text-night-300">{c.capacity}</dt><dd class="mt-1 font-display text-2xl font-bold"><span data-res="capacity">{r.capacity}</span> <span class="text-sm font-normal text-night-300">{c.players}</span></dd></div>
+          <div><dt class="text-sm text-night-300">{c.slots}</dt><dd class="mt-1 font-display text-2xl font-bold"><span data-res="sessions">{r.sessions}</span> <span class="text-sm font-normal text-night-300">{c.sessions}</span></dd></div>
+          <div class="col-span-2 border-t border-night-700 pt-6"><dt class="text-sm text-night-300">{c.monthly}</dt><dd class="mt-1 font-display text-4xl font-bold text-sun sm:text-5xl tabular-nums" aria-live="polite" data-res="monthly">{money(r.monthly)}</dd></div>
+          <div class="col-span-2"><dt class="text-sm text-night-300">{c.yearly}</dt><dd class="mt-1 font-display text-2xl font-bold text-cyan tabular-nums" data-res="yearly">{money(r.yearly)}</dd></div>
+        </dl>
+        <a href={`${routes.contact[lang]}#teklif`} class="btn btn-primary self-start">{c.cta}<Icon name="ArrowRight" size={18} /></a>
+      </div>
+    </form>
+    <div class="reveal mt-5 grid gap-2 text-sm text-ink-soft lg:max-w-4xl">
+      <p class="flex gap-2"><Icon name="Info" size={18} class="mt-0.5 shrink-0" /><span><strong class="text-ink">{c.disclaimer}</strong></span></p>
+      <p class="pl-[26px]">{assumptions} <span class="todo">TODO: CALC — src/config/site.ts</span></p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .calc-range { -webkit-appearance: none; appearance: none; height: 10px; border-radius: 999px; background: linear-gradient(to right, var(--color-coral) var(--p, 30%), var(--color-paper-3) var(--p, 30%)); }
+  .calc-range::-webkit-slider-thumb { -webkit-appearance: none; width: 26px; height: 26px; border-radius: 999px; background: var(--color-night-900); border: 4px solid #fff; box-shadow: 0 0 0 2px var(--color-night-900); cursor: grab; }
+  .calc-range::-moz-range-thumb { width: 20px; height: 20px; border-radius: 999px; background: var(--color-night-900); border: 4px solid #fff; box-shadow: 0 0 0 2px var(--color-night-900); cursor: grab; }
+  .calc-range:focus-visible { outline: 3px solid var(--color-coral-ink); outline-offset: 6px; }
+</style>
+
+<script>
+  import { estimate } from '../../lib/calc';
+  document.querySelectorAll<HTMLFormElement>('[data-calc]').forEach((form) => {
+    const { calc, intl, currency } = JSON.parse(form.dataset.calc!);
+    const num = new Intl.NumberFormat(intl);
+    const money = new Intl.NumberFormat(intl, { style: 'currency', currency, maximumFractionDigits: 0 });
+    const inputs = [...form.querySelectorAll<HTMLInputElement>('input[type=range]')];
+    const set = (sel: string, v: string) => { const el = form.querySelector(sel); if (el) el.textContent = v; };
+    const run = () => {
+      const v = Object.fromEntries(inputs.map((i) => [i.name, Number(i.value)])) as any;
+      inputs.forEach((i) => {
+        i.style.setProperty('--p', `${((+i.value - +i.min) / (+i.max - +i.min)) * 100}%`);
+        set(`[data-out="${i.name}"]`, num.format(+i.value));
+      });
+      const r = estimate(v, calc);
+      set('[data-res="capacity"]', String(r.capacity));
+      set('[data-res="sessions"]', String(r.sessions));
+      set('[data-res="monthly"]', money.format(Math.round(r.monthly)));
+      set('[data-res="yearly"]', money.format(Math.round(r.yearly)));
+    };
+    inputs.forEach((i) => i.addEventListener('input', run));
+    run();
+  });
+</script>

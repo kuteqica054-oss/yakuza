@@ -1,0 +1,204 @@
+---
+/**
+ * Quote form. Delivery is configured in src/config/site.ts → FORM:
+ *  - netlify:   Netlify Forms picks this form up automatically at deploy (data-netlify).
+ *  - formspree: posts to FORM.formspreeEndpoint.
+ *  - php:       posts to /teklif.php (generated from src/pages/teklif.php.ts).
+ * Without JS the form posts normally and lands on the thank-you page.
+ */
+import Icon from '../ui/Icon.astro';
+import SectionHead from '../ui/SectionHead.astro';
+import { FORM } from '../../config/site';
+import { t, routes, type Lang } from '../../i18n';
+interface Props { lang: Lang; showHead?: boolean }
+const { lang, showHead = true } = Astro.props;
+const d = t(lang);
+const f = d.form;
+const isNetlify = FORM.provider === 'netlify';
+const action = isNetlify ? routes.thanks[lang] : FORM.provider === 'php' ? '/teklif.php' : FORM.formspreeEndpoint;
+const errs = JSON.stringify(f.errors);
+const label = 'mb-1.5 block text-sm font-semibold';
+---
+<section class="bg-paper py-20 lg:py-28" id="teklif" aria-labelledby="form-title">
+  <div class="container-x grid gap-12 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+    <div class:list={['lg:sticky lg:top-28 lg:self-start', !showHead && 'sr-only']}>
+      <SectionHead eyebrow={f.eyebrow} title={f.title} sub={f.sub} id="form-title" />
+      <p class="reveal mt-6 flex items-center gap-2 text-sm text-ink-soft"><Icon name="ShieldCheck" size={18} class="text-cyan-ink" />{f.privacyNote}</p>
+    </div>
+
+    <div class="relative">
+      <form
+        name={FORM.name}
+        method="POST"
+        action={action}
+        data-netlify={isNetlify ? 'true' : undefined}
+        netlify-honeypot={isNetlify ? 'bot-field' : undefined}
+        data-provider={FORM.provider}
+        data-errors={errs}
+        novalidate
+        class="reveal grid gap-5 rounded-[var(--radius-blob)] bg-white p-6 ring-1 ring-paper-3 sm:grid-cols-2 sm:p-9"
+        data-quote-form
+      >
+        <input type="hidden" name="form-name" value={FORM.name} />
+        <input type="hidden" name="site_language" value={lang} />
+        <p class="hidden"><label>Bot <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
+
+        <div class="sm:col-span-2 rounded-xl bg-coral-soft px-4 py-3 text-sm font-semibold text-coral-ink" role="alert" hidden data-summary>{f.errors.summary}</div>
+
+        <div>
+          <label for="f-name" class={label}>{f.fields.name} <span class="text-coral-ink" aria-hidden="true">*</span></label>
+          <input id="f-name" name="name" class="field-input" autocomplete="name" required placeholder={f.placeholders.name} aria-describedby="f-name-err" />
+          <p id="f-name-err" class="mt-1 text-sm text-coral-ink" data-err="name" hidden></p>
+        </div>
+        <div>
+          <label for="f-company" class={label}>{f.fields.company} <span class="text-coral-ink" aria-hidden="true">*</span></label>
+          <input id="f-company" name="company" class="field-input" autocomplete="organization" required placeholder={f.placeholders.company} aria-describedby="f-company-err" />
+          <p id="f-company-err" class="mt-1 text-sm text-coral-ink" data-err="company" hidden></p>
+        </div>
+        <div>
+          <label for="f-position" class={label}>{f.fields.position}</label>
+          <input id="f-position" name="position" class="field-input" autocomplete="organization-title" placeholder={f.placeholders.position} />
+        </div>
+        <div>
+          <label for="f-phone" class={label}>{f.fields.phone} <span class="text-coral-ink" aria-hidden="true">*</span></label>
+          <input id="f-phone" name="phone" type="tel" class="field-input" autocomplete="tel" required placeholder={f.placeholders.phone} aria-describedby="f-phone-err" />
+          <p id="f-phone-err" class="mt-1 text-sm text-coral-ink" data-err="phone" hidden></p>
+        </div>
+        <div class="sm:col-span-2">
+          <label for="f-email" class={label}>{f.fields.email} <span class="text-coral-ink" aria-hidden="true">*</span></label>
+          <input id="f-email" name="email" type="email" class="field-input" autocomplete="email" required placeholder={f.placeholders.email} aria-describedby="f-email-err" />
+          <p id="f-email-err" class="mt-1 text-sm text-coral-ink" data-err="email" hidden></p>
+        </div>
+        <div>
+          <label for="f-country" class={label}>{f.fields.country}</label>
+          <input id="f-country" name="country" class="field-input" autocomplete="country-name" placeholder={f.placeholders.country} />
+        </div>
+        <div>
+          <label for="f-city" class={label}>{f.fields.city}</label>
+          <input id="f-city" name="city" class="field-input" autocomplete="address-level2" placeholder={f.placeholders.city} />
+        </div>
+        <div>
+          <label for="f-venue" class={label}>{f.fields.venue} <span class="text-coral-ink" aria-hidden="true">*</span></label>
+          <select id="f-venue" name="venue_type" class="field-input select-chev" required aria-describedby="f-venue-err">
+            <option value="">{f.selectPlaceholder}</option>
+            {f.venueOptions.map((o) => <option value={o.value}>{o.label}</option>)}
+          </select>
+          <p id="f-venue-err" class="mt-1 text-sm text-coral-ink" data-err="venue_type" hidden></p>
+        </div>
+        <div>
+          <label for="f-area" class={label}>{f.fields.area}</label>
+          <input id="f-area" name="area_m2" type="number" inputmode="numeric" min="0" step="1" class="field-input" placeholder={f.placeholders.area} />
+        </div>
+        <div>
+          <label for="f-opening" class={label}>{f.fields.opening}</label>
+          <input id="f-opening" name="planned_opening" type="date" lang={lang} class="field-input" />
+        </div>
+        <fieldset>
+          <legend class={label}>{f.fields.interest}</legend>
+          <div class="flex flex-wrap gap-2">
+            {f.interestOptions.map((o, i) => (
+              <label class="cursor-pointer">
+                <input type="radio" name="interest" value={o.value} checked={i === 0} class="peer sr-only" />
+                <span class="inline-block rounded-full border-2 border-paper-3 px-3.5 py-2 text-sm font-semibold transition peer-checked:border-night-900 peer-checked:bg-night-900 peer-checked:text-paper peer-focus-visible:outline-3 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-coral-ink">{o.label}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+        <div class="sm:col-span-2">
+          <label for="f-message" class={label}>{f.fields.message}</label>
+          <textarea id="f-message" name="message" rows="4" class="field-input resize-y" placeholder={f.placeholders.message}></textarea>
+        </div>
+        <div class="sm:col-span-2">
+          <label class="flex cursor-pointer items-start gap-3 text-sm">
+            <input type="checkbox" name="consent" value="yes" required class="mt-0.5 h-5 w-5 shrink-0 accent-[var(--color-night-900)]" aria-describedby="f-consent-err" />
+            <span>{f.consentBefore}<a href={routes.privacy[lang]} class="font-semibold underline underline-offset-2" target="_blank">{f.consentLink}</a>{f.consentAfter} <span class="text-coral-ink" aria-hidden="true">*</span></span>
+          </label>
+          <p id="f-consent-err" class="mt-1 text-sm text-coral-ink" data-err="consent" hidden></p>
+        </div>
+        <div class="sm:col-span-2 flex flex-wrap items-center justify-between gap-4">
+          <p class="text-xs text-ink-soft"><span class="text-coral-ink">*</span> {f.required}</p>
+          <button type="submit" class="btn btn-primary" data-submit data-sending={f.sending}>
+            <span data-label>{f.submit}</span><Icon name="ArrowRight" size={18} />
+          </button>
+        </div>
+        <p class="sm:col-span-2 text-sm font-semibold text-coral-ink" role="alert" hidden data-network>{f.errors.network}</p>
+      </form>
+
+      <div class="rounded-[var(--radius-blob)] bg-night-900 p-8 text-paper sm:p-12" hidden data-thanks tabindex="-1" aria-labelledby="thanks-title">
+        <svg aria-hidden="true" viewBox="0 0 120 120" class="h-20 w-20"><circle cx="60" cy="60" r="54" fill="none" stroke="#1fd6c8" stroke-width="4" /><circle cx="60" cy="60" r="38" fill="none" stroke="#ff5a4e" stroke-width="4" /><circle cx="60" cy="60" r="20" fill="#ffc93c" /><path d="M50 60 l7 7 l14 -15" stroke="#0c1a3d" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        <h3 id="thanks-title" class="mt-6 text-2xl font-bold sm:text-3xl">{f.thanks.title}</h3>
+        <p class="mt-3 max-w-lg text-night-200">{f.thanks.text}</p>
+        <a href={routes.themes[lang]} class="btn btn-primary mt-7">{f.thanks.cta}<Icon name="ArrowRight" size={18} /></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>('[data-quote-form]').forEach((form) => {
+    const errors = JSON.parse(form.dataset.errors!);
+    const provider = form.dataset.provider;
+    const thanks = form.parentElement!.querySelector<HTMLElement>('[data-thanks]')!;
+    const summary = form.querySelector<HTMLElement>('[data-summary]')!;
+    const network = form.querySelector<HTMLElement>('[data-network]')!;
+    const btn = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+    const btnLabel = btn.querySelector<HTMLElement>('[data-label]')!;
+
+    const rules: Record<string, (v: string, el: HTMLInputElement) => boolean> = {
+      name: (v) => v.trim().length >= 2,
+      company: (v) => v.trim().length >= 1,
+      phone: (v) => v.replace(/\D/g, '').length >= 7,
+      email: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()),
+      venue_type: (v) => v !== '',
+      consent: (_v, el) => el.checked,
+    };
+    const showErr = (name: string, msg: string | null) => {
+      const el = form.elements.namedItem(name) as HTMLInputElement;
+      const p = form.querySelector<HTMLElement>(`[data-err="${name}"]`);
+      el?.setAttribute('aria-invalid', msg ? 'true' : 'false');
+      if (p) { p.textContent = msg ?? ''; p.hidden = !msg; }
+    };
+    const validate = () => {
+      let firstBad: HTMLElement | null = null;
+      for (const [name, ok] of Object.entries(rules)) {
+        const el = form.elements.namedItem(name) as HTMLInputElement;
+        const valid = ok(el.value, el);
+        showErr(name, valid ? null : errors[name === 'venue_type' ? 'venue' : name]);
+        if (!valid && !firstBad) firstBad = el;
+      }
+      return firstBad;
+    };
+    Object.keys(rules).forEach((name) => {
+      const el = form.elements.namedItem(name) as HTMLInputElement;
+      el.addEventListener('change', () => { if (el.getAttribute('aria-invalid') === 'true') validate(); });
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      network.hidden = true;
+      const bad = validate();
+      summary.hidden = !bad;
+      if (bad) { bad.focus(); return; }
+
+      btn.disabled = true;
+      const orig = btnLabel.textContent;
+      btnLabel.textContent = btn.dataset.sending!;
+      const data = new FormData(form);
+      try {
+        const res = provider !== 'netlify'
+          ? await fetch(form.action, { method: 'POST', body: data, headers: { Accept: 'application/json' } })
+          : await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(data as any).toString() });
+        if (!res.ok) throw new Error(String(res.status));
+        form.hidden = true;
+        thanks.hidden = false;
+        thanks.focus();
+        thanks.scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+      } catch {
+        network.hidden = false;
+      } finally {
+        btn.disabled = false;
+        btnLabel.textContent = orig;
+      }
+    });
+  });
+</script>

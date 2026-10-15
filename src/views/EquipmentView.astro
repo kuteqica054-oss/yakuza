@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/sections/PageHero.astro';
+import CtaBand from '../components/sections/CtaBand.astro';
+import EquipmentArt from '../components/art/EquipmentArt.astro';
+import Icon from '../components/ui/Icon.astro';
+import SpecTable from '../components/ui/SpecTable.astro';
+import Scoreboard from '../components/ui/Scoreboard.astro';
+import ControlPanel from '../components/ui/ControlPanel.astro';
+import PhotoSlot from '../components/ui/PhotoSlot.astro';
+import Todo from '../components/ui/Todo.astro';
+import LaserDivider from '../components/ui/LaserDivider.astro';
+import { t, type Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const d = t(lang);
+const e = d.equipment;
+const p = d.pages.equipment;
+const bg = ['bg-cyan-soft', 'bg-coral-soft', 'bg-sun-soft'];
+---
+<BaseLayout lang={lang} page="equipment">
+  <PageHero eyebrow={p.eyebrow} title={p.title} sub={p.sub} tone="coral">
+    <nav class="mt-8 flex flex-wrap gap-2" aria-label={e.title}>
+      {e.items.map((it) => <a href={`#${it.id}`} class="rounded-full bg-night-800 px-4 py-2 text-sm font-semibold text-night-200 hover:bg-paper hover:text-ink">{it.name}</a>)}
+    </nav>
+  </PageHero>
+
+  <div class="bg-paper">
+    {e.items.map((it, i) => (
+      <section id={it.id} class:list={['py-16 lg:py-24', i % 2 && 'bg-paper-2']} aria-labelledby={`${it.id}-title`}>
+        <div class="container-x grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+          <div class:list={['reveal grid place-items-center rounded-[var(--radius-blob)] p-8 maze-dots sm:p-12', bg[i % 3], i % 2 && 'lg:order-2']}>
+            <EquipmentArt id={it.id} alt={it.alt} class="w-full max-w-lg" />
+          </div>
+          <div class="reveal">
+            <p class="font-display text-sm font-bold text-ink-soft">0{i + 1} / 0{e.items.length}</p>
+            <h2 id={`${it.id}-title`} class="mt-3 text-3xl font-bold sm:text-4xl">{it.name}</h2>
+            <p class="mt-2 font-semibold text-coral-ink">{it.short}</p>
+            <p class="muted mt-4">{it.text}</p>
+            <ul class="mt-5 grid gap-2">
+              {it.features.map((f) => <li class="flex gap-2.5"><Icon name="Check" size={20} class="mt-0.5 shrink-0 text-cyan-ink" /><Todo text={f} /></li>)}
+            </ul>
+            <h3 class="mt-8 font-sans text-sm font-bold text-ink-soft">{e.specsLabel}</h3>
+            <SpecTable class="mt-2" caption={`${it.name} — ${e.specsLabel}`} param={e.paramLabel} value={e.valueLabel} rows={it.specs} />
+          </div>
+        </div>
+      </section>
+    ))}
+  </div>
+
+  <section class="scene-dark arena-grid relative overflow-hidden py-20 lg:py-28" aria-labelledby="system-title">
+    <LaserDivider variant="top" />
+    <div class="container-x grid items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
+      <div class="reveal">
+        <h2 id="system-title" class="h-section">{p.systemTitle}</h2>
+        <p class="lead mt-5 text-night-200">{p.systemText}</p>
+        <p class="mt-6 text-sm text-night-300"><Todo text={p.note} /></p>
+      </div>
+      <div class="reveal grid gap-5 sm:grid-cols-2">
+        <ControlPanel lang={lang} />
+        <Scoreboard lang={lang} class="sm:mt-10" />
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-paper pt-16">
+    <div class="container-x grid gap-5 md:grid-cols-2">
+      <!-- PHOTO: equipment close-ups, 1600×1000 px -->
+      <PhotoSlot label={d.common.photoSlot} note="1600×1000 — ekipman / equipment" />
+      <PhotoSlot label={d.common.photoSlot} note="1600×1000 — ekipman / equipment" />
+    </div>
+  </section>
+  <CtaBand lang={lang} />
+</BaseLayout>

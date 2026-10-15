@@ -1,0 +1,15 @@
+---
+/** Two crossing laser beams with a target at the crossing — section divider motif. */
+interface Props { variant?: 'top' | 'light' | 'dark'; class?: string }
+const { variant = 'light', class: cls = '' } = Astro.props;
+const onDark = variant !== 'light';
+---
+<div aria-hidden="true" class:list={['pointer-events-none relative h-10 w-full', variant === 'top' && 'absolute inset-x-0 top-0', cls]}>
+  <svg class="absolute inset-0 h-full w-full" viewBox="0 0 1200 40" preserveAspectRatio="none">
+    <line x1="0" y1="34" x2="1200" y2="6" stroke="#ff5a4e" stroke-width="1.5" vector-effect="non-scaling-stroke" opacity={onDark ? 0.9 : 0.7} />
+    <line x1="0" y1="8" x2="1200" y2="30" stroke="#1fd6c8" stroke-width="1.5" vector-effect="non-scaling-stroke" opacity={onDark ? 0.9 : 0.8} />
+  </svg>
+  <span class="absolute left-[52%] top-1/2 -translate-x-1/2 -translate-y-1/2">
+    <span class:list={['block h-4 w-4 rounded-full border-[3px] border-sun', onDark ? 'bg-night-900 shadow-[0_0_14px_2px_rgb(255_201_60/.55)]' : 'bg-paper']}></span>
+  </span>
+</div>

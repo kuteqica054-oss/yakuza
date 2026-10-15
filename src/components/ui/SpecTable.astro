@@ -1,0 +1,16 @@
+---
+import Todo from './Todo.astro';
+interface Props { caption: string; param: string; value: string; rows: string[][]; class?: string }
+const { caption, param, value, rows, class: cls = '' } = Astro.props;
+---
+<div class:list={['overflow-hidden rounded-2xl border border-paper-3 bg-white', cls]}>
+  <table class="w-full text-left text-[0.95rem]">
+    <caption class="sr-only">{caption}</caption>
+    <thead class="bg-paper-2 text-xs text-ink-soft"><tr><th scope="col" class="px-4 py-2.5 font-bold">{param}</th><th scope="col" class="px-4 py-2.5 font-bold">{value}</th></tr></thead>
+    <tbody>
+      {rows.map(([k, v]) => (
+        <tr class="border-t border-paper-2"><th scope="row" class="px-4 py-2.5 font-semibold">{k}</th><td class="px-4 py-2.5 text-ink-soft"><Todo text={v} /></td></tr>
+      ))}
+    </tbody>
+  </table>
+</div>

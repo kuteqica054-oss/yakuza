@@ -1,0 +1,14 @@
+---
+/** Lucide icon (inlined at build, zero JS). name = Lucide PascalCase export, e.g. "ShieldCheck". */
+import * as icons from 'lucide-static';
+interface Props { name: string; size?: number; class?: string; strokeWidth?: number }
+const { name, size = 24, class: cls = '', strokeWidth = 2 } = Astro.props;
+const raw: string = (icons as Record<string, string>)[name] ?? (icons as Record<string, string>).Circle;
+const svg = raw
+  .replace(/width="\d+"/, `width="${size}"`)
+  .replace(/height="\d+"/, `height="${size}"`)
+  .replace(/stroke-width="[\d.]+"/, `stroke-width="${strokeWidth}"`)
+  .replace('<svg', `<svg aria-hidden="true" focusable="false" class="${cls}"`)
+  .replace(/class="lucide[^"]*"/, '');
+---
+<Fragment set:html={svg} />

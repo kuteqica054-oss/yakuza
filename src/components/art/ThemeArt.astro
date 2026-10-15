@@ -1,0 +1,134 @@
+---
+/** Theme preview scenes, each with its own palette & motif. Palettes are exported for swatches. */
+interface Props { id: string; alt: string; class?: string }
+const { id, alt, class: cls = '' } = Astro.props;
+
+
+// deterministic pseudo-random for stars/bubbles
+let seed = id.length * 97;
+const rnd = () => ((seed = (seed * 9301 + 49297) % 233280) / 233280);
+const stars = Array.from({ length: 46 }, () => ({ x: rnd() * 400, y: rnd() * 170, r: rnd() * 1.6 + 0.4 }));
+const bubbles = Array.from({ length: 16 }, () => ({ x: rnd() * 400, y: rnd() * 230, r: rnd() * 7 + 2 }));
+const pid = `t-${id}`;
+---
+<svg class={cls} viewBox="0 0 400 260" role="img" aria-label={alt} xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+  {id === 'space' && (
+    <g>
+      <rect width="400" height="260" fill="#0e1b4d" />
+      {stars.map((s) => <circle cx={s.x} cy={s.y} r={s.r} fill="#e9f0ff" opacity={0.4 + s.r / 3} />)}
+      <circle cx="300" cy="70" r="38" fill="#ffc93c" />
+      <path d="M300 70 m-30 -10 a38 38 0 0 1 24 -26" stroke="#fff3c4" stroke-width="5" fill="none" stroke-linecap="round" opacity=".7" />
+      <ellipse cx="300" cy="72" rx="66" ry="14" fill="none" stroke="#ff5a4e" stroke-width="5" transform="rotate(-14 300 72)" />
+      <circle cx="80" cy="50" r="10" fill="#3d6bff" />
+      <path d="M0 260 V176 L40 156 H360 L400 176 V260 Z" fill="#1c2f78" />
+      {[0, 1, 2, 3, 4, 5].map((i) => <path d={`M${36 + i * 56} 196 l14 -10 h20 l14 10 l-14 10 h-20 Z`} fill="#3d6bff" opacity={0.25 + (i % 3) * 0.2} />)}
+      <rect x="164" y="128" width="72" height="62" rx="12" fill="#e9f0ff" />
+      <circle cx="200" cy="158" r="18" fill="#0e1b4d" />
+      <circle class="pulse" cx="200" cy="158" r="10" fill="#1fd6c8" />
+      <line x1="60" y1="232" x2="340" y2="216" stroke="#1fd6c8" stroke-width="2.5" opacity=".9" />
+      <line x1="60" y1="214" x2="340" y2="236" stroke="#ff5a4e" stroke-width="2.5" opacity=".9" />
+    </g>
+  )}
+
+  {id === 'jungle' && (
+    <g>
+      <rect width="400" height="260" fill="#0f3b2e" />
+      <path d="M130 260 V170 H270 V260 Z" fill="#1d5a43" />
+      <path d="M150 170 V130 H250 V170 Z" fill="#256b4f" />
+      <path d="M170 130 V100 H230 V130 Z" fill="#2f8f5b" />
+      <path d="M190 260 v-50 a10 10 0 0 1 20 0 v50 Z" fill="#0a2a20" />
+      {[[178, 146], [222, 146], [200, 116]].map(([x, y], i) => (
+        <g><circle cx={x} cy={y} r="11" fill="#1fd6c8" opacity=".3" /><circle class="pulse" style={`animation-delay:${i * 0.6}s`} cx={x} cy={y} r="6" fill="#1fd6c8" /></g>
+      ))}
+      {[
+        [20, 40, -30, '#2f8f5b'], [60, 10, 20, '#3fa86a'], [-10, 120, -60, '#2f8f5b'], [340, 30, 30, '#3fa86a'],
+        [380, 110, 60, '#2f8f5b'], [300, 0, -10, '#8be36a'], [30, 210, -80, '#3fa86a'], [370, 220, 80, '#3fa86a'],
+      ].map(([x, y, r, c]) => (
+        <path transform={`translate(${x} ${y}) rotate(${r})`} d="M0 0 C 30 -20 70 -10 90 20 C 60 40 20 40 0 0 Z M0 0 L 85 20" fill={c as string} stroke="#0f3b2e" stroke-width="2" />
+      ))}
+      <path d="M110 0 C 120 60 90 90 110 150" stroke="#8be36a" stroke-width="3" fill="none" />
+      <path d="M300 0 C 280 50 320 80 296 140" stroke="#8be36a" stroke-width="3" fill="none" />
+    </g>
+  )}
+
+  {id === 'ocean' && (
+    <g>
+      <defs><linearGradient id={`${pid}-g`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0f8a95" /><stop offset="1" stop-color="#073b52" /></linearGradient></defs>
+      <rect width="400" height="260" fill={`url(#${pid}-g)`} />
+      {[60, 150, 240, 330].map((x) => <path d={`M${x} 0 L${x + 40} 0 L${x - 10} 200 L${x - 40} 200 Z`} fill="#d2f6f2" opacity=".07" />)}
+      <path d="M0 26 Q 25 16 50 26 T 100 26 T 150 26 T 200 26 T 250 26 T 300 26 T 350 26 T 400 26" stroke="#d2f6f2" stroke-width="2" fill="none" opacity=".5" />
+      {bubbles.map((b) => <circle cx={b.x} cy={b.y} r={b.r} fill="none" stroke="#d2f6f2" stroke-width="1.5" opacity=".55" />)}
+      <path d="M0 260 V220 Q100 200 200 222 T400 214 V260 Z" fill="#05293a" />
+      <path d="M60 230 c0 -30 -20 -40 -10 -60 M60 230 c0 -20 20 -30 14 -54 M60 230 c-4 -14 -24 -18 -30 -36" stroke="#ff7a6b" stroke-width="7" fill="none" stroke-linecap="round" />
+      <path d="M330 226 c0 -26 16 -34 8 -52 M330 226 c-6 -20 -22 -24 -20 -44" stroke="#ffc93c" stroke-width="7" fill="none" stroke-linecap="round" />
+      <g transform="translate(170 110)"><path d="M0 0 q30 -22 60 0 q-30 22 -60 0 Z" fill="#ff7a6b" /><path d="M60 0 l16 -12 v24 Z" fill="#ff7a6b" /><circle cx="14" cy="-2" r="3" fill="#073b52" /></g>
+      <g transform="translate(250 160) scale(.7)"><path d="M0 0 q30 -22 60 0 q-30 22 -60 0 Z" fill="#1fd6c8" /><path d="M60 0 l16 -12 v24 Z" fill="#1fd6c8" /><circle cx="14" cy="-2" r="3" fill="#073b52" /></g>
+      <path d="M140 222 l40 -24 h70 l20 24 Z" fill="#0b4a5e" />
+      <circle class="pulse" cx="214" cy="212" r="5" fill="#ffc93c" />
+    </g>
+  )}
+
+  {id === 'neon' && (
+    <g>
+      <rect width="400" height="260" fill="#0b1533" />
+      <circle cx="320" cy="50" r="22" fill="#fff1c7" opacity=".9" />
+      {[
+        [10, 110, 50], [66, 80, 44], [116, 130, 40], [160, 60, 56], [222, 100, 42], [270, 70, 50], [326, 120, 36], [366, 90, 34],
+      ].map(([x, top, w], i) => (
+        <g>
+          <rect x={x} y={top} width={w} height={200 - top} fill={i % 2 ? '#13254f' : '#1a2f60'} />
+          {Array.from({ length: Math.floor((190 - top) / 18) }, (_, r) => Array.from({ length: Math.floor(w / 14) }, (_, c) => (
+            <rect x={x + 5 + c * 14} y={top + 8 + r * 18} width="7" height="9" rx="1" fill={(r + c + i) % 5 === 0 ? '#ffc93c' : (r * c + i) % 7 === 0 ? '#1fd6c8' : '#2b4682'} />
+          )))}
+        </g>
+      ))}
+      <rect x="166" y="40" width="44" height="14" rx="7" fill="none" stroke="#ff5a4e" stroke-width="3" />
+      <rect x="274" y="54" width="40" height="10" rx="5" fill="none" stroke="#1fd6c8" stroke-width="3" />
+      <rect x="0" y="200" width="400" height="60" fill="#08122c" />
+      <line x1="0" y1="200" x2="400" y2="200" stroke="#ff5a4e" stroke-width="3" />
+      <line x1="0" y1="210" x2="400" y2="210" stroke="#1fd6c8" stroke-width="1.5" opacity=".7" />
+      {[40, 120, 200, 280, 360].map((x) => <line x1="200" y1="210" x2={x * 2 - 200} y2="260" stroke="#2b4682" stroke-width="1.5" />)}
+      <circle class="pulse" cx="188" cy="47" r="3" fill="#ff5a4e" />
+    </g>
+  )}
+
+  {id === 'robot' && (
+    <g>
+      <rect width="400" height="260" fill="#1d2a3a" />
+      <circle cx="70" cy="70" r="40" fill="none" stroke="#7c8ea6" stroke-width="16" stroke-dasharray="10 8" />
+      <circle cx="70" cy="70" r="22" fill="#2c3d52" stroke="#7c8ea6" stroke-width="6" />
+      <circle cx="132" cy="38" r="24" fill="none" stroke="#ffc93c" stroke-width="12" stroke-dasharray="7 6" />
+      <circle cx="132" cy="38" r="9" fill="#ffc93c" />
+      <circle cx="350" cy="50" r="32" fill="none" stroke="#7c8ea6" stroke-width="12" stroke-dasharray="8 7" />
+      <rect x="0" y="200" width="400" height="22" fill="#2c3d52" />
+      {Array.from({ length: 14 }, (_, i) => <circle cx={14 + i * 30} cy="211" r="7" fill="#1d2a3a" stroke="#7c8ea6" stroke-width="2" />)}
+      <rect x="0" y="222" width="400" height="38" fill="#152030" />
+      <rect x="40" y="176" width="40" height="24" rx="5" fill="#ff5a4e" />
+      <rect x="300" y="180" width="30" height="20" rx="5" fill="#1fd6c8" />
+      <g transform="translate(160 64)">
+        <line x1="40" y1="0" x2="40" y2="-18" stroke="#7c8ea6" stroke-width="4" />
+        <circle class="blink" cx="40" cy="-22" r="6" fill="#ff5a4e" />
+        <rect x="0" y="0" width="80" height="64" rx="18" fill="#e8edf3" />
+        <rect x="10" y="12" width="60" height="30" rx="12" fill="#1d2a3a" />
+        <circle cx="28" cy="27" r="7" fill="#1fd6c8" /><circle cx="52" cy="27" r="7" fill="#1fd6c8" />
+        <path d="M28 52 q12 8 24 0" stroke="#1d2a3a" stroke-width="4" fill="none" stroke-linecap="round" />
+        <rect x="8" y="70" width="64" height="64" rx="14" fill="#ffc93c" />
+        <circle cx="40" cy="100" r="12" fill="#1d2a3a" /><circle class="pulse" cx="40" cy="100" r="6" fill="#ff5a4e" />
+        <rect x="-14" y="78" width="16" height="40" rx="8" fill="#e8edf3" /><rect x="78" y="78" width="16" height="40" rx="8" fill="#e8edf3" />
+      </g>
+    </g>
+  )}
+
+  {id === 'custom' && (
+    <g>
+      <rect width="400" height="260" fill="#fbf8f2" />
+      <defs><pattern id={`${pid}-d`} width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.5" fill="#0c1a3d" opacity=".12" /></pattern></defs>
+      <rect width="400" height="260" fill={`url(#${pid}-d)`} />
+      <rect x="40" y="36" width="320" height="188" rx="22" fill="none" stroke="#0c1a3d" stroke-width="3" stroke-dasharray="10 8" />
+      <circle cx="200" cy="112" r="40" fill="#0c1a3d" />
+      <path d="M176 128 L224 96 M176 96 L224 128" stroke="#ffc93c" stroke-width="5" stroke-linecap="round" />
+      <circle cx="200" cy="112" r="10" fill="#ff5a4e" />
+      {[0, 1, 2, 3].map((i) => <rect x={136 + i * 34} y="176" width="26" height="26" rx="8" fill={['#ff5a4e', '#1fd6c8', '#ffc93c', '#0c1a3d'][i]} />)}
+    </g>
+  )}
+</svg>

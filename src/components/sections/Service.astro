@@ -1,0 +1,34 @@
+---
+import Icon from '../ui/Icon.astro';
+import SectionHead from '../ui/SectionHead.astro';
+import Todo from '../ui/Todo.astro';
+import { t, type Lang } from '../../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const s = t(lang).service;
+---
+<section class="bg-paper-2 py-20 lg:py-28" aria-labelledby="service-title">
+  <div class="container-x">
+    <SectionHead eyebrow={s.eyebrow} title={s.title} sub={s.sub} id="service-title" />
+    <div class="reveal mt-12 overflow-hidden rounded-[var(--radius-blob)] bg-paper ring-1 ring-paper-3">
+      <table class="w-full text-left">
+        <caption class="sr-only">{s.title}</caption>
+        <thead class="hidden bg-night-900 text-sm text-paper md:table-header-group">
+          <tr><th scope="col" class="px-6 py-3 font-bold" colspan="2">{s.eyebrow}</th><th scope="col" class="px-6 py-3 font-bold">{s.termsLabel}</th></tr>
+        </thead>
+        <tbody>
+          {s.items.map((it, i) => (
+            <tr class="grid border-t border-paper-2 first:border-t-0 md:table-row">
+              <th scope="row" class="flex items-center gap-3 px-6 pt-5 md:w-64 md:py-5">
+                <span class:list={['grid h-10 w-10 shrink-0 place-items-center rounded-xl', ['bg-coral-soft text-coral-ink', 'bg-cyan-soft text-cyan-ink', 'bg-sun-soft text-sun-ink'][i % 3]]}><Icon name={it.icon} size={20} /></span>
+                <span class="font-display font-bold">{it.title}</span>
+              </th>
+              <td class="muted px-6 pt-2 md:py-5">{it.text}</td>
+              <td class="px-6 pt-2 pb-5 text-sm md:w-72 md:py-5"><span class="mr-1 font-semibold text-ink-soft md:hidden">{s.termsLabel}:</span><Todo text={it.terms} /></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

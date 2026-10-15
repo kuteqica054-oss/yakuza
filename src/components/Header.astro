@@ -1,0 +1,75 @@
+---
+import Logo from './ui/Logo.astro';
+import Icon from './ui/Icon.astro';
+import LangSwitch from './LangSwitch.astro';
+import { t, routes, type Lang, type PageId } from '../i18n';
+interface Props { lang: Lang; page: PageId | 'notFound' }
+const { lang, page } = Astro.props;
+const d = t(lang);
+const items = d.nav.items as { page: PageId; label: string }[];
+---
+<header class="sticky top-0 z-40 bg-night-950/95 text-paper backdrop-blur-sm border-b border-night-800" data-header>
+  <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-50 focus:rounded-full focus:bg-sun focus:px-4 focus:py-2 focus:text-ink focus:font-bold">{d.nav.skip}</a>
+  <div class="container-x flex h-[4.25rem] items-center justify-between gap-4">
+    <a href={routes.home[lang]} aria-label={`${d.meta.siteName} — ${d.nav.home}`} class="shrink-0"><Logo dark /></a>
+
+    <nav aria-label={d.nav.menu} class="hidden xl:block">
+      <ul class="flex items-center gap-1">
+        {items.map((it) => (
+          <li>
+            <a
+              href={routes[it.page][lang]}
+              aria-current={it.page === page ? 'page' : undefined}
+              class:list={['rounded-full px-3.5 py-2 text-[0.95rem] font-semibold transition-colors',
+                it.page === page ? 'bg-night-800 text-paper' : 'text-night-200 hover:text-paper']}
+            >{it.label}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="flex items-center gap-2 sm:gap-3">
+      <div class="hidden sm:block"><LangSwitch lang={lang} page={page} label={d.nav.lang} /></div>
+      <a href={`${routes.contact[lang]}#teklif`} class="btn btn-primary hidden md:inline-flex !py-2.5 !px-5 text-sm">{d.nav.cta}</a>
+      <button type="button" class="xl:hidden inline-flex h-11 w-11 items-center justify-center rounded-full bg-night-800 text-paper"
+        aria-expanded="false" aria-controls="mobile-menu" data-menu-btn>
+        <span class="sr-only" data-menu-label data-open={d.nav.menu} data-close={d.nav.close}>{d.nav.menu}</span>
+        <span data-icon-open><Icon name="Menu" size={22} /></span>
+        <span data-icon-close hidden><Icon name="X" size={22} /></span>
+      </button>
+    </div>
+  </div>
+
+  <div id="mobile-menu" class="xl:hidden border-t border-night-800 bg-night-950" hidden data-menu>
+    <nav aria-label={d.nav.menu} class="container-x py-6">
+      <ul class="grid gap-1">
+        {items.map((it) => (
+          <li><a href={routes[it.page][lang]} aria-current={it.page === page ? 'page' : undefined}
+            class="block rounded-xl px-3 py-3 font-display text-lg font-semibold hover:bg-night-800">{it.label}</a></li>
+        ))}
+      </ul>
+      <div class="mt-6 flex flex-wrap items-center gap-3">
+        <a href={`${routes.contact[lang]}#teklif`} class="btn btn-primary">{d.nav.cta}</a>
+        <LangSwitch lang={lang} page={page} label={d.nav.lang} />
+      </div>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('[data-menu-btn]');
+  const menu = document.querySelector<HTMLElement>('[data-menu]');
+  if (btn && menu) {
+    const label = btn.querySelector<HTMLElement>('[data-menu-label]')!;
+    const set = (open: boolean) => {
+      btn.setAttribute('aria-expanded', String(open));
+      menu.hidden = !open;
+      btn.querySelector<HTMLElement>('[data-icon-open]')!.hidden = open;
+      btn.querySelector<HTMLElement>('[data-icon-close]')!.hidden = !open;
+      label.textContent = open ? label.dataset.close! : label.dataset.open!;
+    };
+    btn.addEventListener('click', () => set(btn.getAttribute('aria-expanded') !== 'true'));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !menu.hidden) { set(false); btn.focus(); } });
+    matchMedia('(min-width: 1280px)').addEventListener('change', (e) => e.matches && set(false));
+  }
+</script>

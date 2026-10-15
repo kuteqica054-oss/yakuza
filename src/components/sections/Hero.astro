@@ -1,0 +1,43 @@
+---
+import HeroArena from '../art/HeroArena.astro';
+import Icon from '../ui/Icon.astro';
+import Scoreboard from '../ui/Scoreboard.astro';
+import { t, routes, type Lang } from '../../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const d = t(lang);
+const h = d.hero;
+---
+<section class="scene-dark arena-grid relative overflow-hidden" aria-labelledby="hero-title">
+  <div aria-hidden="true" class="pointer-events-none absolute -left-40 top-20 h-[28rem] w-[28rem] rounded-full bg-coral/15 blur-3xl"></div>
+  <div aria-hidden="true" class="pointer-events-none absolute -right-32 bottom-0 h-[26rem] w-[26rem] rounded-full bg-cyan/15 blur-3xl"></div>
+  <div class="container-x relative grid items-center gap-10 pt-12 pb-16 sm:pt-16 lg:grid-cols-[0.95fr_1.05fr] lg:gap-4 lg:pt-20 lg:pb-24">
+    <div class="relative z-10">
+      <p class="eyebrow text-cyan">{h.eyebrow}</p>
+      <h1 id="hero-title" class="mt-5 text-[2.2rem] leading-[1.06] font-bold sm:text-5xl lg:text-[3.25rem]">
+        {h.titleBefore}{' '}
+        <span class="relative whitespace-nowrap text-sun">{h.titleHighlight}<svg aria-hidden="true" class="absolute -bottom-2 left-0 h-3 w-full" viewBox="0 0 200 12" preserveAspectRatio="none"><path d="M2 9 Q 100 -2 198 7" stroke="#ff5a4e" stroke-width="4" fill="none" stroke-linecap="round" /></svg></span>{' '}
+        {h.titleAfter}
+      </h1>
+      <p class="lead mt-6 max-w-xl text-night-200">{h.sub}</p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href={`${routes.contact[lang]}#teklif`} class="btn btn-primary">{d.common.getQuote}<Icon name="ArrowRight" size={20} /></a>
+        <a href="#surec" class="btn btn-ghost-dark">{d.common.howItWorks}</a>
+      </div>
+      <ul class="mt-10 flex flex-wrap gap-x-6 gap-y-3 text-sm text-night-200">
+        {h.chips.map((c, i) => (
+          <li class="flex items-center gap-2"><span class:list={['h-2 w-2 rounded-full', ['bg-coral', 'bg-cyan', 'bg-sun'][i % 3]]}></span>{c}</li>
+        ))}
+      </ul>
+    </div>
+    <div class="relative -mx-4 pb-6 sm:mx-0 lg:-mr-10 lg:pb-12">
+      <HeroArena alt={h.sceneAlt} class="relative w-full drop-shadow-[0_40px_40px_rgb(8_18_44/.6)]" />
+      <div class="float absolute -bottom-4 left-4 hidden w-64 sm:block lg:left-0" aria-hidden="true">
+        <Scoreboard lang={lang} compact />
+      </div>
+      <span class="absolute left-4 top-0 inline-flex items-center gap-2 rounded-full bg-night-950/80 px-3 py-1.5 text-xs font-bold text-paper ring-1 ring-night-700 sm:left-6">
+        <span class="h-2 w-2 rounded-full bg-coral blink"></span>{h.live}
+      </span>
+    </div>
+  </div>
+</section>

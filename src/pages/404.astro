@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { t, routes } from '../i18n';
+const tr = t('tr').pages.notFound;
+const en = t('en').pages.notFound;
+---
+<BaseLayout lang="tr" page="notFound" noindex>
+  <section class="scene-dark arena-grid grid min-h-[70vh] place-items-center py-20">
+    <div class="container-x max-w-2xl text-center">
+      <p class="font-display text-7xl font-bold text-sun sm:text-8xl">404</p>
+      <h1 class="mt-6 text-3xl font-bold sm:text-4xl">{tr.title}</h1>
+      <p class="mt-3 text-night-200">{tr.text}</p>
+      <a href={routes.home.tr} class="btn btn-primary mt-6">{t('tr').common.backHome}</a>
+      <div lang="en" class="mt-12 border-t border-night-700 pt-8">
+        <p class="font-display text-xl font-bold">{en.title}</p>
+        <p class="mt-2 text-night-200">{en.text}</p>
+        <a href={routes.home.en} class="link-arrow mt-4 text-cyan">{t('en').common.backHome}</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

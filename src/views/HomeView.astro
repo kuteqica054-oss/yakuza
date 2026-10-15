@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/sections/Hero.astro';
+import Audience from '../components/sections/Audience.astro';
+import Why from '../components/sections/Why.astro';
+import Process from '../components/sections/Process.astro';
+import Themes from '../components/sections/Themes.astro';
+import Equipment from '../components/sections/Equipment.astro';
+import Safety from '../components/sections/Safety.astro';
+import Plan from '../components/sections/Plan.astro';
+import Calculator from '../components/sections/Calculator.astro';
+import ArcadeTeaser from '../components/sections/ArcadeTeaser.astro';
+import Service from '../components/sections/Service.astro';
+import Faq from '../components/sections/Faq.astro';
+import QuoteForm from '../components/sections/QuoteForm.astro';
+import { faqSchema } from '../lib/schema';
+import type { Lang } from '../i18n';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+---
+<BaseLayout lang={lang} page="home" schema={[faqSchema(lang)]}>
+  <Hero lang={lang} />
+  <Audience lang={lang} />
+  <Why lang={lang} />
+  <Process lang={lang} />
+  <Themes lang={lang} />
+  <Equipment lang={lang} />
+  <Safety lang={lang} />
+  <Plan lang={lang} />
+  <Calculator lang={lang} />
+  <ArcadeTeaser lang={lang} />
+  <Service lang={lang} />
+  <Faq lang={lang} />
+  <QuoteForm lang={lang} />
+</BaseLayout>

@@ -1,0 +1,7 @@
+---
+/** Renders text; any "TODO…" fragment gets highlighted so placeholders are impossible to miss. */
+interface Props { text: string }
+const { text } = Astro.props;
+const parts = text.split(/(TODO(?::[^.()]*)?)/g).filter(Boolean);
+---
+{parts.map((p) => (p.startsWith('TODO') ? <span class="todo">{p}</span> : p))}
