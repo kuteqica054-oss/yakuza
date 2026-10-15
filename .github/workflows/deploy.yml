@@ -62,3 +62,16 @@ jobs:
           # (no --delete) so nothing unrelated in public_html is ever removed.
           rsync -az --stats -e "$SSH" dist/ "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/"
           $SSH "$SSH_USER@$SSH_HOST" "ls -la '$DEPLOY_PATH' | head -30"
+
+      - name: Smoke test live site
+        run: |
+          sleep 5
+          for u in / /en/ /anahtar-teslim/ /en/turnkey/ /og/tr.png /sitemap.xml; do
+            code=$(curl -s -o /tmp/body -w '%{http_code}' "https://yakuzablade.com.tr$u" || true)
+            echo "$code https://yakuzablade.com.tr$u"
+          done
+          echo "--- title of /:"
+          curl -s https://yakuzablade.com.tr/ | grep -o '<title>[^<]*</title>' || echo "(no title found)"
+          echo "--- redirects:"
+          curl -s -o /dev/null -w '%{http_code} -> %{redirect_url}\n' http://yakuzablade.com.tr/ || true
+          curl -s -o /dev/null -w '%{http_code} -> %{redirect_url}\n' https://www.yakuzablade.com.tr/ || true
