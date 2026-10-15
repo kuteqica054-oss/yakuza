@@ -1,0 +1,64 @@
+name: Deploy to Hostinger
+
+# Runs on every push to main (and manually from the Actions tab).
+# Builds the Astro site and uploads dist/ to the hosting over SSH.
+#
+# Required repository secrets (Settings → Secrets and variables → Actions):
+#   SSH_HOST      e.g. 45.84.204.200
+#   SSH_PORT      e.g. 65002
+#   SSH_USER      e.g. u514346694
+#   SSH_PASSWORD  hosting SSH password
+# Optional variable (Settings → Secrets and variables → Actions → Variables):
+#   DEPLOY_PATH   default: domains/yakuzablade.com.tr/public_html  (relative to the SSH home dir)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      DEPLOY_PATH: ${{ vars.DEPLOY_PATH || 'domains/yakuzablade.com.tr/public_html' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Build
+        run: |
+          npm ci
+          npm run build
+
+      - name: Check secrets
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+        run: |
+          for v in SSH_HOST SSH_USER SSH_PASSWORD; do
+            [ -n "${!v}" ] || { echo "::error::Secret $v is not set"; exit 1; }
+          done
+
+      - name: Upload over SSH
+        env:
+          SSHPASS: ${{ secrets.SSH_PASSWORD }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT || '22' }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+        run: |
+          sudo apt-get install -y -qq sshpass rsync >/dev/null
+          SSH="sshpass -e ssh -p $SSH_PORT -o StrictHostKeyChecking=accept-new"
+          $SSH "$SSH_USER@$SSH_HOST" "mkdir -p '$DEPLOY_PATH'"
+          # Upload/overwrite site files. Files that exist only on the server are kept
+          # (no --delete) so nothing unrelated in public_html is ever removed.
+          rsync -az --stats -e "$SSH" dist/ "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/"
+          $SSH "$SSH_USER@$SSH_HOST" "ls -la '$DEPLOY_PATH' | head -30"
