@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/sections/PageHero.astro';
 import CtaBand from '../components/sections/CtaBand.astro';
 import PhotoSlot from '../components/ui/PhotoSlot.astro';
+import Owners from '../components/sections/Owners.astro';
 import { BRAND, CONTACT } from '../config/site';
 import { t, type Lang } from '../i18n';
 interface Props { lang: Lang }
@@ -50,6 +51,7 @@ const rows: [string, string][] = [
       <dl class="reveal mt-6 divide-y divide-paper-3 border-y border-paper-3">
         {rows.map(([k, v]) => <div class="grid gap-1 py-3 sm:grid-cols-[14rem_1fr]"><dt class="font-semibold">{k}</dt><dd class="text-ink-soft">{v || <span class="todo">TODO</span>}</dd></div>)}
       </dl>
+      <div class="mt-14"><Owners lang={lang} /></div>
     </div>
   </section>
   <CtaBand lang={lang} />

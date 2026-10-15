@@ -24,15 +24,31 @@ export const AGE_RANGE = { min: 6, max: 14 };
 /** Contacts & legal details. Leave '' until known — UI shows a TODO placeholder. */
 export const CONTACT = {
   email: '', // TODO: e.g. teklif@alanadiniz.com
-  phone: '', // TODO: e.g. +90 212 000 00 00
+  phone: '+90 212 631 65 19',
   /** WhatsApp number in international format, digits only, e.g. 905xxxxxxxxx. TODO */
   whatsapp: '',
-  address: '', // TODO: açık adres
+  address: 'Mahfil Çıkmazı 18, 34134 Fatih / İstanbul, Türkiye',
   taxOffice: '', // TODO: vergi dairesi
   taxNumber: '', // TODO: vergi no
   mersis: '', // TODO: MERSİS no
   kep: '', // TODO: KEP adresi (KVKK başvuruları için)
 };
+
+/** Company owners — shown on About and Contact pages. */
+export const OWNERS = [
+  {
+    name: 'Birsen Gökkaya',
+    address: ['Mahfil Çıkmazı 18', '34134 Fatih / İstanbul', 'Türkiye'],
+    phone: '0212 631 65 19',
+    tel: '+902126316519',
+  },
+  {
+    name: 'Gülden Uygur',
+    address: ['Şehit Sami Akbulut Caddesi 183A', '35980 Dikili / İzmir', 'Türkiye'],
+    phone: '0232 671 909', // TODO: number has only 10 digits (TR landlines have 11) — verify
+    tel: '+90232671909',
+  },
+];
 
 /** Social links. TODO: replace '#' with real profile URLs. */
 export const SOCIAL = {

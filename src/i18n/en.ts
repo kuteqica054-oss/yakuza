@@ -686,6 +686,7 @@ const en: Dict = {
         { title: "Clear timelines, open communication", text: "At every step you know what's done and what's next." },
       ],
       companyTitle: "Company details",
+      ownersTitle: "Company owners",
       legalName: "Legal name",
       photoNote: "Reserved for a team and workshop photo.",
     },

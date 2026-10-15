@@ -1,0 +1,27 @@
+---
+import Icon from '../ui/Icon.astro';
+import { OWNERS } from '../../config/site';
+import { t, type Lang } from '../../i18n';
+interface Props { lang: Lang; dark?: boolean }
+const { lang, dark = false } = Astro.props;
+const d = t(lang);
+---
+<div>
+  <h2 class:list={['text-2xl font-bold', dark && 'text-paper']}>{d.pages.about.ownersTitle}</h2>
+  <ul class="mt-6 grid gap-5 sm:grid-cols-2">
+    {OWNERS.map((o, i) => (
+      <li class:list={['reveal rounded-[var(--radius-blob)] p-6', dark ? 'bg-night-800 ring-1 ring-night-700 text-paper' : 'bg-paper ring-1 ring-paper-3']}>
+        <span class:list={['inline-block h-2.5 w-10 rounded-full', i % 2 ? 'bg-cyan' : 'bg-coral']}></span>
+        <p class="mt-4 font-display text-lg font-bold">{o.name}</p>
+        <address class:list={['mt-3 flex gap-3 not-italic', dark ? 'text-night-200' : 'text-ink-soft']}>
+          <Icon name="MapPin" size={20} class="mt-0.5 shrink-0 text-cyan-ink" />
+          <span>{o.address.map((l) => <span class="block">{l}</span>)}</span>
+        </address>
+        <p class="mt-3 flex gap-3">
+          <Icon name="Phone" size={20} class="mt-0.5 shrink-0 text-cyan-ink" />
+          <a href={`tel:${o.tel}`} class="font-semibold underline-offset-4 hover:underline">{o.phone}</a>
+        </p>
+      </li>
+    ))}
+  </ul>
+</div>

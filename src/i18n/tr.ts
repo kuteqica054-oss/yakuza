@@ -756,6 +756,7 @@ const tr = {
         { title: "Açık takvim, açık iletişim", text: "Her adımda ne yapıldığını ve sırada ne olduğunu bilirsiniz." },
       ],
       companyTitle: "Şirket bilgileri",
+      ownersTitle: "Şirket sahipleri",
       legalName: "Unvan",
       photoNote: "Ekip ve atölye fotoğrafı için ayrılmış alan.",
     },
